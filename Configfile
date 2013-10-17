@@ -1,0 +1,18 @@
+LANGUAGES   += c++
+COMPILEOPTS += -Wall
+COMPILEOPTS += -Werror
+COMPILEOPTS += -Wextra
+COMPILEOPTS += -ansi
+COMPILEOPTS += -pedantic
+
+LANGUAGES   += bash
+
+BINARIES    += chisel-ecc
+SOURCES     += cecc/chisel.c++
+
+BINARIES    += openssl-sign
+COMPILEOPTS += `ppkg-config --have OPENSSL openssl --cflags`
+LINKOPTS    += `ppkg-config --have OPENSSL openssl --libs`
+SOURCES     += cecc/openssl-sign.c++
+
+TESTSRC     += simple.bash
