@@ -4,7 +4,6 @@
 #include <iostream>
 #include <openssl/ec.h>
 #include <openssl/ecdsa.h>
-#include <openssl/ssl.h>
 
 int main(int argc, char **argv)
 {
@@ -13,9 +12,8 @@ int main(int argc, char **argv)
     EC_KEY *key;
     ECDSA_SIG *sig;
     Signature *signature;
-
-    /* Before touching anything we need to initialize OpenSSL. */
-    SSL_library_init();
+    BIGNUM *kinv;
+    BIGNUM *rp;
 
     /* Here we simply parse the command-line arguments. */
     args = new Args(argc, argv);
@@ -31,14 +29,44 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-    /* FIXME: Actually generates the key instead of reading it in. */
-    if (EC_KEY_generate_key(key) != 1) {
-        std::cerr << "Unable to generate keypair\n";
-        exit(1);
+    /* Set the key to something known so we keep getting the same
+     * signature every time, allowing the test harness to actually
+     * run. */
+    {
+        BN_CTX *ctx;
+        EC_POINT *pubkey;
+        const char *pubkey_str;
+
+        pubkey = EC_POINT_new(group);
+        pubkey_str = args->public_key->hex.c_str();
+
+        ctx = BN_CTX_new();
+        pubkey = EC_POINT_hex2point(group, pubkey_str, pubkey, ctx);
+        EC_KEY_set_public_key(key, pubkey);
+        BN_CTX_free(ctx);
     }
 
+    {
+        BIGNUM *privkey;
+        const char *privkey_str;
+        
+        privkey_str = args->private_key->hex.c_str();
+        privkey = NULL;
+        BN_hex2bn(&privkey, privkey_str);
+        EC_KEY_set_private_key(key, privkey);
+    }
+
+    /* There are a few parameters used for ECDSA signatures.  It's
+     * insecure to keep these constant, but it's actually better this
+     * way because we get predictable signatures. */
+    kinv = NULL;
+    BN_hex2bn(&kinv, args->kinv->hex.c_str());
+    rp = NULL;
+    BN_hex2bn(&rp, args->rp->hex.c_str());
+
     /* Here's where we actually do the signature. */
-    sig = ECDSA_do_sign(args->digest->bytes(), args->digest->length(), key);
+    sig = ECDSA_do_sign_ex(args->digest->bytes(), args->digest->length(),
+                           kinv, rp, key);
     if (sig == NULL) {
         std::cerr << "Unable to sign digest\n";
         exit(1);

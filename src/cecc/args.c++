@@ -29,8 +29,40 @@ Args::Args(int argc, char **argv)
             }
         } else if (strcmp(argv[i], "--pubkey") == 0) {
             i++;
+
+            try {
+                this->public_key = new PublicKey(argv[i], curve->size());
+            } catch(InvalidArgument e) {
+                std::cerr << "Error parsing '--pubkey " << argv[i] << "':\n";
+                std::cerr << "  " << e.reason << "\n";
+            }
         } else if (strcmp(argv[i], "--privkey") == 0) {
             i++;
+
+            try {
+                this->private_key = new PrivateKey(argv[i], curve->size());
+            } catch(InvalidArgument e) {
+                std::cerr << "Error parsing '--privkey " << argv[i] << "':\n";
+                std::cerr << "  " << e.reason << "\n";
+            }
+        } else if (strcmp(argv[i], "--kinv") == 0) {
+            i++;
+
+            try {
+                this->kinv = new BigInt(argv[i], curve->size());
+            } catch(InvalidArgument e) {
+                std::cerr << "Error parsing '--kinv " << argv[i] << "':\n";
+                std::cerr << "  " << e.reason << "\n";
+            }
+        } else if (strcmp(argv[i], "--rp") == 0) {
+            i++;
+
+            try {
+                this->rp = new BigInt(argv[i], curve->size());
+            } catch(InvalidArgument e) {
+                std::cerr << "Error parsing '--rp " << argv[i] << "':\n";
+                std::cerr << "  " << e.reason << "\n";
+            }
         } else if (strcmp(argv[i], "--digest") == 0) {
             i++;
 

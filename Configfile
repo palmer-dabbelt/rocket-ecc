@@ -14,5 +14,10 @@ BINARIES    += openssl-sign
 COMPILEOPTS += `ppkg-config --have OPENSSL openssl --cflags`
 LINKOPTS    += `ppkg-config --have OPENSSL openssl --libs`
 SOURCES     += cecc/openssl-sign.c++
-
 TESTSRC     += simple.bash
+
+BINARIES    += openssl-genkey
+COMPILEOPTS += `ppkg-config --have OPENSSL openssl --cflags`
+LINKOPTS    += `ppkg-config --have OPENSSL openssl --libs`
+SOURCES     += cecc/openssl-genkey.c++
+
