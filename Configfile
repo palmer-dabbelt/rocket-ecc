@@ -1,3 +1,5 @@
+# In at attempt to write portable code I've gone ahead and attempted
+# to get GCC to warn me whenever possible.
 LANGUAGES   += c++
 COMPILEOPTS += -Wall
 COMPILEOPTS += -Werror
@@ -5,19 +7,30 @@ COMPILEOPTS += -Wextra
 COMPILEOPTS += -ansi
 COMPILEOPTS += -pedantic
 
+# The test harnesses are written (at least partially) in bash
 LANGUAGES   += bash
 
-BINARIES    += chisel-ecc
-SOURCES     += cecc/chisel.c++
+##############################################################################
+# RISC-V Tests                                                               #
+##############################################################################
 
-BINARIES    += openssl-sign
+# FIXME: Figure out how to build tests that run on a RISC-V machine
+
+##############################################################################
+# x86 Tests                                                                  #
+##############################################################################
+
+# FIXME: Write tests that actually run using some of my own code.
+
+# The remaining tests use OpenSSL to verify that all the crypto code I
+# wrote is actually somewhat sane.
+LANGUAGES   += c++
 COMPILEOPTS += `ppkg-config --have OPENSSL openssl --cflags`
 LINKOPTS    += `ppkg-config --have OPENSSL openssl --libs`
-SOURCES     += cecc/openssl-sign.c++
-TESTSRC     += simple.bash
 
 BINARIES    += openssl-genkey
-COMPILEOPTS += `ppkg-config --have OPENSSL openssl --cflags`
-LINKOPTS    += `ppkg-config --have OPENSSL openssl --libs`
-SOURCES     += cecc/openssl-genkey.c++
+SOURCES     += shim/openssl-genkey.c++
 
+BINARIES    += openssl-sign
+SOURCES     += shim/openssl-sign.c++
+TESTSRC     += simple.bash
