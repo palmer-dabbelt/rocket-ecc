@@ -34,3 +34,7 @@ SOURCES     += shim/openssl-genkey.c++
 BINARIES    += openssl-sign
 SOURCES     += shim/openssl-sign.c++
 TESTSRC     += simple.bash
+
+BINARIES    += openssl-verify
+SOURCES     += shim/openssl-verify.c++
+TESTSRC     += simple.bash

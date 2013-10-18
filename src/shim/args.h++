@@ -17,6 +17,8 @@ public:
     PrivateKey *private_key;
     BigInt *rp;
     BigInt *kinv;
+    BigInt *r;
+    BigInt *s;
 
 public:
     Args(int argc, char **argv);

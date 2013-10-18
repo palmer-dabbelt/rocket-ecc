@@ -72,6 +72,24 @@ Args::Args(int argc, char **argv)
                 std::cerr << "Error parsing '--digest " << argv[i] << "':\n";
                 std::cerr << "  " << e.reason << "\n";
             }
+        } else if (strcmp(argv[i], "--r") == 0) {
+            i++;
+
+            try {
+                this->r = new BigInt(argv[i], curve->size());
+            } catch(InvalidArgument e) {
+                std::cerr << "Error parsing '--r " << argv[i] << "':\n";
+                std::cerr << "  " << e.reason << "\n";
+            }
+        } else if (strcmp(argv[i], "--s") == 0) {
+            i++;
+
+            try {
+                this->s = new BigInt(argv[i], curve->size());
+            } catch(InvalidArgument e) {
+                std::cerr << "Error parsing '--s " << argv[i] << "':\n";
+                std::cerr << "  " << e.reason << "\n";
+            }
         } else {
             std::cerr << "Unknown argument '" << argv[i] << "':\n";
         }

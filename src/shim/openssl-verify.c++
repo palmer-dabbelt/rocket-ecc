@@ -11,9 +11,7 @@ int main(int argc, char **argv)
     EC_GROUP *group;
     EC_KEY *key;
     ECDSA_SIG *sig;
-    Signature *signature;
-    BIGNUM *kinv;
-    BIGNUM *rp;
+    int verified;
 
     /* Here we simply parse the command-line arguments. */
     args = new Args(argc, argv);
@@ -46,6 +44,7 @@ int main(int argc, char **argv)
         BN_CTX_free(ctx);
     }
 
+    /* FIXME: We probably shouldn't need the private key... righ? */
     {
         BIGNUM *privkey;
         const char *privkey_str;
@@ -56,32 +55,20 @@ int main(int argc, char **argv)
         EC_KEY_set_private_key(key, privkey);
     }
 
-    /* There are a few parameters used for ECDSA signatures.  It's
-     * insecure to keep these constant, but it's actually better this
-     * way because we get predictable signatures. */
-    kinv = NULL;
-    BN_hex2bn(&kinv, args->kinv->hex.c_str());
-    rp = NULL;
-    BN_hex2bn(&rp, args->rp->hex.c_str());
+    /* Load up the signature from the commandline arguments. */
+    sig = ECDSA_SIG_new();
+    BN_hex2bn(&sig->r, args->r->hex.c_str());
+    BN_hex2bn(&sig->s, args->s->hex.c_str());
 
-    /* Here's where we actually do the signature. */
-    sig = ECDSA_do_sign_ex(args->digest->bytes(), args->digest->length(),
-                           kinv, rp, key);
-    if (sig == NULL) {
-        std::cerr << "Unable to sign digest\n";
-        exit(1);
+    /* Here's where we actually do the verification. */
+    verified = ECDSA_do_verify(args->digest->bytes(), args->digest->length(),
+                               sig, key);
+
+    if (verified) {
+        std::cout << "Success\n";
+    } else {
+        std::cout << "Failure\n";
     }
-
-    /* Finally convert the signature into a more standardized
-     * format. */
-    {
-        signature = new Signature(BN_bn2hex(sig->r),
-                                  BN_bn2hex(sig->s),
-                                  i2d_ECDSA_SIG(sig, NULL));
-    }
-
-    std::cout << "--r " << signature->r() << "\n";
-    std::cout << "--s " << signature->s() << "\n";
 
     /* Cleans up the OpenSSL context. */
     ECDSA_SIG_free(sig);
@@ -89,7 +76,6 @@ int main(int argc, char **argv)
     EC_GROUP_free(group);
 
     /* Cleans up after our own allocations. */
-    delete signature;
     delete args;
 
     return 0;
