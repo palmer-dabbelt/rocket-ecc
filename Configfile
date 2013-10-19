@@ -38,3 +38,8 @@ TESTSRC     += simple.bash
 BINARIES    += openssl-verify
 SOURCES     += shim/openssl-verify.c++
 TESTSRC     += simple.bash
+
+# This is a special, simple OpenSSL test that seems to be somewhat
+# more reliable than my big block of C++ code.
+BINARIES    += simple-ecc
+SOURCES     += simple-ecc.c++
