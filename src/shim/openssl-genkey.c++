@@ -38,6 +38,12 @@ int main(int argc, char **argv)
         exit(1);
     }
 
+    /* Verify that the keypair is OK. */
+    if (!EC_KEY_check_key(key)) {
+        std::cerr << "Invalid key pair\n";
+        return 2;
+    }
+
     /* Prints out the pubilc and private keys. */
     pubkey = EC_KEY_get0_public_key(key);
     {
@@ -60,7 +66,7 @@ int main(int argc, char **argv)
 
         rp = NULL;
         kinv = NULL;
-        ECDSA_sign_setup(key, ctx, &rp, &kinv);
+        ECDSA_sign_setup(key, ctx, &kinv, &rp);
 
         std::cout << "--rp " << BN_bn2hex(rp) << "\n";
         std::cout << "--kinv " << BN_bn2hex(kinv) << "\n";
