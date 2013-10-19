@@ -61,13 +61,15 @@ int main(int argc, char **argv)
     BN_hex2bn(&sig->s, args->s->hex.c_str());
 
     /* Here's where we actually do the verification. */
-    verified = ECDSA_do_verify(args->digest->bytes(), args->digest->length(),
+    verified = ECDSA_do_verify(args->digest->bytes(),
+                               args->digest->byte_length(),
                                sig, key);
 
     if (verified) {
         std::cout << "Success\n";
     } else {
         std::cout << "Failure\n";
+        return 1;
     }
 
     /* Cleans up the OpenSSL context. */

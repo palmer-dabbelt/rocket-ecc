@@ -26,7 +26,7 @@ int main(int argc, char **argv)
     key = EC_KEY_new_by_curve_name(args->curve->openssl_name());
     if (key == NULL) {
         std::cerr << "Unable to allocate key structure\n";
-        exit(1);
+        return 2;
     }
 
     /* Set the key to something known so we keep getting the same
@@ -61,15 +61,41 @@ int main(int argc, char **argv)
      * way because we get predictable signatures. */
     kinv = NULL;
     BN_hex2bn(&kinv, args->kinv->hex.c_str());
+    if (kinv == NULL) {
+        std::cerr << "Unable to parse kinv\n";
+        return 2;
+    }
+
     rp = NULL;
     BN_hex2bn(&rp, args->rp->hex.c_str());
+    if (rp == NULL) {
+        std::cerr << "Unable to parse rp\n";
+        return 2;
+    }
 
     /* Here's where we actually do the signature. */
-    sig = ECDSA_do_sign_ex(args->digest->bytes(), args->digest->length(),
+    //ECDSA_sign_setup(key, NULL, &kinv, &rp);
+    sig = ECDSA_do_sign_ex(args->digest->bytes(),
+                           args->digest->byte_length(),
                            kinv, rp, key);
     if (sig == NULL) {
         std::cerr << "Unable to sign digest\n";
-        exit(1);
+        return 2;
+    }
+
+    /* Verify the signature and fail if we don't get a proper
+     * verification. */
+    {
+        int verified;
+
+        verified = ECDSA_do_verify(args->digest->bytes(),
+                                   args->digest->byte_length(),
+                                   sig, key);
+
+        if (verified != 1) {
+            std::cerr << "Unable to verify signature\n";
+            return 2;
+        }
     }
 
     /* Finally convert the signature into a more standardized

@@ -5,18 +5,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-Digest::Digest(std::string hex, int size)
+Digest::Digest(std::string hex, int bit_length)
 {
-    this->size = size;
-    this->hex = hex;
+    this->_bit_length = bit_length;
+    this->_hex = hex;
 
-    this->raw_bytes = new unsigned char[size / 8];
+    this->_bytes = new unsigned char[bit_length / 8];
     {
         char *raw_bytes, *raw_hex;
-        raw_bytes = (char *)this->raw_bytes;
-        raw_hex = (char *)this->hex.c_str();
+        raw_bytes = (char *)this->_bytes;
+        raw_hex = (char *)this->_hex.c_str();
 
-        for (int i = 0; i < (this->size / 8); i++) {
+        for (int i = 0; i < (bit_length / 8); i++) {
             unsigned int val;
 
             val = (*raw_hex) - '0';
@@ -34,15 +34,15 @@ Digest::Digest(std::string hex, int size)
 
 Digest::~Digest(void)
 {
-    delete[] this->raw_bytes;
+    delete[] this->_bytes;
 }
 
-int Digest::length(void) const
+int Digest::byte_length(void) const
 {
-    return this->size;
+    return this->_bit_length / 8;
 }
 
 const unsigned char *Digest::bytes(void) const
 {
-    return this->raw_bytes;
+    return this->_bytes;
 }
