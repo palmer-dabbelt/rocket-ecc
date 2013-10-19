@@ -1,0 +1,2 @@
+TESTSRC     += simple.bash
+TESTSRC     += genkey.bash

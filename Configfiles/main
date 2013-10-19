@@ -33,13 +33,11 @@ SOURCES     += shim/openssl-genkey.c++
 
 BINARIES    += openssl-sign
 SOURCES     += shim/openssl-sign.c++
-TESTSRC     += simple.bash
-TESTSRC     += genkey.bash
+CONFIG      += testdb
 
 BINARIES    += openssl-verify
 SOURCES     += shim/openssl-verify.c++
-TESTSRC     += simple.bash
-TESTSRC     += genkey.bash
+CONFIG      += testdb
 
 # This is a special, simple OpenSSL test that seems to be somewhat
 # more reliable than my big block of C++ code.
