@@ -42,7 +42,10 @@ int main(int argc, char **argv)
 
         ctx = BN_CTX_new();
         pubkey = EC_POINT_hex2point(group, pubkey_str, pubkey, ctx);
-        EC_KEY_set_public_key(key, pubkey);
+        if (EC_KEY_set_public_key(key, pubkey) != 1) {
+            std::cerr << "Unable to set public key\n";
+            return 2;
+        }
         BN_CTX_free(ctx);
     }
 
@@ -53,7 +56,16 @@ int main(int argc, char **argv)
         privkey_str = args->private_key->hex.c_str();
         privkey = NULL;
         BN_hex2bn(&privkey, privkey_str);
-        EC_KEY_set_private_key(key, privkey);
+        if (EC_KEY_set_private_key(key, privkey) != 1) {
+            std::cerr << "Unable to set private key\n";
+            return 2;
+        }
+    }
+
+    /* Verify that the keypair is OK. */
+    if (!EC_KEY_check_key(key)) {
+        std::cerr << "Invalid key pair\n";
+        return 2;
     }
 
     /* There are a few parameters used for ECDSA signatures.  It's
@@ -74,7 +86,6 @@ int main(int argc, char **argv)
     }
 
     /* Here's where we actually do the signature. */
-    //ECDSA_sign_setup(key, NULL, &kinv, &rp);
     sig = ECDSA_do_sign_ex(args->digest->bytes(),
                            args->digest->byte_length(),
                            kinv, rp, key);
