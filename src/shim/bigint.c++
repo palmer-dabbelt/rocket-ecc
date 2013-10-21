@@ -1,11 +1,5 @@
 #include "bigint.h++"
 
-BigInt::BigInt(void)
-{
-    this->_bit_length = -1;
-    this->_bytes = NULL;
-}
-
 BigInt::BigInt(std::string hex, int bit_length)
 {
     this->_hex = hex;

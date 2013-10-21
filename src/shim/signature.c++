@@ -1,9 +1,9 @@
 #include "signature.h++"
 
 Signature::Signature(std::string r_hex, std::string s_hex, int size)
+    : _r(r_hex, size),
+      _s(s_hex, size)
 {
-    this->_r = BigInt(r_hex, size);
-    this->_s = BigInt(s_hex, size);
 }
 
 std::string Signature::r(void) const

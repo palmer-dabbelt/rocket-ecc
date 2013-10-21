@@ -11,8 +11,6 @@ protected:
     unsigned char *_bytes;
 
 public:
-    BigInt(void);
-
     BigInt(std::string hex, int bit_length);
 
     /* Returns this integer as a hex string. */
