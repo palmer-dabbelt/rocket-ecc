@@ -2,17 +2,16 @@
 
 Signature::Signature(std::string r_hex, std::string s_hex, int size)
 {
-    this->size = size;
-    this->r_hex = r_hex;
-    this->s_hex = s_hex;
+    this->_r = BigInt(r_hex, size);
+    this->_s = BigInt(s_hex, size);
 }
 
 std::string Signature::r(void) const
 {
-    return this->r_hex;
+    return this->_r.hex();
 }
 
 std::string Signature::s(void) const
 {
-    return this->s_hex;
+    return this->_s.hex();
 }

@@ -1,14 +1,15 @@
 #ifndef SIGNATURE_HXX
 #define SIGNATURE_HXX
 
+#include "bigint.h++"
+
 #include <string>
 
 class Signature
 {
 private:
-    int size;
-    std::string r_hex;
-    std::string s_hex;
+    BigInt _r;
+    BigInt _s;
 
 public:
     /* Parses a signature from a pair of hex values. */

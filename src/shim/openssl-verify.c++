@@ -57,8 +57,8 @@ int main(int argc, char **argv)
 
     /* Load up the signature from the commandline arguments. */
     sig = ECDSA_SIG_new();
-    BN_hex2bn(&sig->r, args->r->hex.c_str());
-    BN_hex2bn(&sig->s, args->s->hex.c_str());
+    BN_hex2bn(&sig->r, args->r->hex_cstr());
+    BN_hex2bn(&sig->s, args->s->hex_cstr());
 
     /* Here's where we actually do the verification. */
     verified = ECDSA_do_verify(args->digest->bytes(),

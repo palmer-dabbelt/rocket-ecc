@@ -72,14 +72,14 @@ int main(int argc, char **argv)
      * insecure to keep these constant, but it's actually better this
      * way because we get predictable signatures. */
     kinv = NULL;
-    BN_hex2bn(&kinv, args->kinv->hex.c_str());
+    BN_hex2bn(&kinv, args->kinv->hex_cstr());
     if (kinv == NULL) {
         std::cerr << "Unable to parse kinv\n";
         return 2;
     }
 
     rp = NULL;
-    BN_hex2bn(&rp, args->rp->hex.c_str());
+    BN_hex2bn(&rp, args->rp->hex_cstr());
     if (rp == NULL) {
         std::cerr << "Unable to parse rp\n";
         return 2;
