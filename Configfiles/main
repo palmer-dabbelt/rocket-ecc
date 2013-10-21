@@ -38,8 +38,3 @@ CONFIG      += testdb
 BINARIES    += openssl-verify
 SOURCES     += shim/openssl-verify.c++
 CONFIG      += testdb
-
-# This is a special, simple OpenSSL test that seems to be somewhat
-# more reliable than my big block of C++ code.
-BINARIES    += simple-ecc
-SOURCES     += simple-ecc.c++
