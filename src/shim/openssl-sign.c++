@@ -86,7 +86,7 @@ int main(int argc, char **argv)
     }
 
     /* Here's where we actually do the signature. */
-    sig = ECDSA_do_sign_ex(args->digest->bytes(),
+    sig = ECDSA_do_sign_ex(args->digest->byte_str(),
                            args->digest->byte_length(),
                            kinv, rp, key);
     if (sig == NULL) {
@@ -99,7 +99,7 @@ int main(int argc, char **argv)
     {
         int verified;
 
-        verified = ECDSA_do_verify(args->digest->bytes(),
+        verified = ECDSA_do_verify(args->digest->byte_str(),
                                    args->digest->byte_length(),
                                    sig, key);
 

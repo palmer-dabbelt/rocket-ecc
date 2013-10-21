@@ -61,7 +61,7 @@ int main(int argc, char **argv)
     BN_hex2bn(&sig->s, args->s->hex_cstr());
 
     /* Here's where we actually do the verification. */
-    verified = ECDSA_do_verify(args->digest->bytes(),
+    verified = ECDSA_do_verify(args->digest->byte_str(),
                                args->digest->byte_length(),
                                sig, key);
 

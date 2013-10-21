@@ -3,12 +3,34 @@
 BigInt::BigInt(void)
 {
     this->_bit_length = -1;
+    this->_bytes = NULL;
 }
 
 BigInt::BigInt(std::string hex, int bit_length)
 {
     this->_hex = hex;
     this->_bit_length = bit_length;
+
+    this->_bytes = new unsigned char[bit_length / 8];
+    {
+        char *raw_bytes, *raw_hex;
+        raw_bytes = (char *)this->_bytes;
+        raw_hex = (char *)this->_hex.c_str();
+
+        for (int i = 0; i < (bit_length / 8); i++) {
+            unsigned int val;
+
+            val = (*raw_hex) - '0';
+            val <<= 8;
+            raw_hex++;
+
+            val += (*raw_hex) - '0';
+            raw_hex++;
+
+            *raw_bytes = val;
+            raw_bytes++;
+        }
+    }
 }
 
 std::string BigInt::hex(void) const
@@ -20,3 +42,19 @@ const char *BigInt::hex_cstr(void) const
 {
     return this->_hex.c_str();
 }
+
+int BigInt::bit_length(void) const
+{
+    return this->_bit_length;
+}
+
+int BigInt::byte_length(void) const
+{
+    return this->_bit_length / 8;
+}
+
+const unsigned char *BigInt::byte_str(void) const
+{
+    return this->_bytes;
+}
+
