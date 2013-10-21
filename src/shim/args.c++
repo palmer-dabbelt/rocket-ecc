@@ -5,10 +5,6 @@
 #include <string>
 #include <string.h>
 
-#ifdef HAVE_OPENSSL
-#include <openssl/obj_mac.h>
-#endif
-
 Args::Args(int argc, char **argv)
 {
     int i;
@@ -31,7 +27,7 @@ Args::Args(int argc, char **argv)
             i++;
 
             try {
-                this->public_key = new PublicKey(argv[i], curve->size());
+                this->public_key = new PublicKey(argv[i], curve->bit_length());
             } catch(InvalidArgument e) {
                 std::cerr << "Error parsing '--pubkey " << argv[i] << "':\n";
                 std::cerr << "  " << e.reason << "\n";
@@ -40,7 +36,8 @@ Args::Args(int argc, char **argv)
             i++;
 
             try {
-                this->private_key = new PrivateKey(argv[i], curve->size());
+                this->private_key = new PrivateKey(argv[i],
+                                                   curve->bit_length());
             } catch(InvalidArgument e) {
                 std::cerr << "Error parsing '--privkey " << argv[i] << "':\n";
                 std::cerr << "  " << e.reason << "\n";
@@ -49,7 +46,7 @@ Args::Args(int argc, char **argv)
             i++;
 
             try {
-                this->kinv = new BigInt(argv[i], curve->size());
+                this->kinv = new BigInt(argv[i], curve->bit_length());
             } catch(InvalidArgument e) {
                 std::cerr << "Error parsing '--kinv " << argv[i] << "':\n";
                 std::cerr << "  " << e.reason << "\n";
@@ -58,7 +55,7 @@ Args::Args(int argc, char **argv)
             i++;
 
             try {
-                this->rp = new BigInt(argv[i], curve->size());
+                this->rp = new BigInt(argv[i], curve->bit_length());
             } catch(InvalidArgument e) {
                 std::cerr << "Error parsing '--rp " << argv[i] << "':\n";
                 std::cerr << "  " << e.reason << "\n";
@@ -67,7 +64,7 @@ Args::Args(int argc, char **argv)
             i++;
 
             try {
-                this->digest = new Digest(argv[i], curve->size());
+                this->digest = new Digest(argv[i], curve->bit_length());
             } catch(InvalidArgument e) {
                 std::cerr << "Error parsing '--digest " << argv[i] << "':\n";
                 std::cerr << "  " << e.reason << "\n";
@@ -76,7 +73,7 @@ Args::Args(int argc, char **argv)
             i++;
 
             try {
-                this->r = new BigInt(argv[i], curve->size());
+                this->r = new BigInt(argv[i], curve->bit_length());
             } catch(InvalidArgument e) {
                 std::cerr << "Error parsing '--r " << argv[i] << "':\n";
                 std::cerr << "  " << e.reason << "\n";
@@ -85,7 +82,7 @@ Args::Args(int argc, char **argv)
             i++;
 
             try {
-                this->s = new BigInt(argv[i], curve->size());
+                this->s = new BigInt(argv[i], curve->bit_length());
             } catch(InvalidArgument e) {
                 std::cerr << "Error parsing '--s " << argv[i] << "':\n";
                 std::cerr << "  " << e.reason << "\n";
@@ -97,19 +94,3 @@ Args::Args(int argc, char **argv)
 
     this->curve = new Curve();
 }
-
-#ifdef HAVE_OPENSSL
-int Curve::openssl_name(void) const
-{
-    switch (this->type) {
-    case TYPE_P_256_K_1:
-        return NID_secp256k1;
-    case TYPE_P_521_R_1:
-        return NID_secp521r1;
-    }
-
-    /* This should never get here, but I guess the C++ compiler
-     * doesn't detect that?  It's odd, because I belive C will... */
-    return -1;
-}
-#endif

@@ -16,7 +16,7 @@ public:
 
 private:
     /* Enumerates what sort of curve this is. */
-    enum Type type;
+    enum Type _type;
 
 public:
     /* Generates a new curve, given the canonical name of that curve
@@ -32,7 +32,7 @@ public:
 
     /* Returns the size of this curve, which is the actual bit size
      * (not the security parameter). */
-    int size(void) const;
+    int bit_length(void) const;
 };
 
 #endif
