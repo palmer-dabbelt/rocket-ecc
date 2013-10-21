@@ -53,7 +53,7 @@ int main(int argc, char **argv)
         BIGNUM *privkey;
         const char *privkey_str;
         
-        privkey_str = args->private_key->hex.c_str();
+        privkey_str = args->private_key->hex_cstr();
         privkey = NULL;
         BN_hex2bn(&privkey, privkey_str);
         if (EC_KEY_set_private_key(key, privkey) != 1) {

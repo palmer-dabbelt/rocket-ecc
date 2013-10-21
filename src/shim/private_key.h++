@@ -1,16 +1,14 @@
 #ifndef PRIVATE_KEY_HXX
 #define PRIVATE_KEY_HXX
 
+#include "bigint.h++"
+
 #include <string>
 
-class PrivateKey
+class PrivateKey: public BigInt
 {
 public:
-    int length;
-    std::string hex;
-
-public:
-    PrivateKey(std::string hex, int length);
+    PrivateKey(std::string hex, int bit_length);
 };
 
 #endif

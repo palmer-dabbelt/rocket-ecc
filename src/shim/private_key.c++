@@ -1,7 +1,6 @@
 #include "private_key.h++"
 
-PrivateKey::PrivateKey(std::string hex, int length)
+PrivateKey::PrivateKey(std::string hex, int bit_length)
+    : BigInt(hex, bit_length)
 {
-    this->length = length;
-    this->hex = hex;
 }
