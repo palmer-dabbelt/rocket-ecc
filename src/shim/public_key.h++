@@ -1,16 +1,14 @@
 #ifndef PUBLIC_KEY_HXX
 #define PUBILC_KEY_HXX
 
+#include "point.h++"
+
 #include <string>
 
-class PublicKey
+class PublicKey: public Point
 {
 public:
-    int length;
-    std::string hex;
-
-public:
-    PublicKey(std::string hex, int length);
+    PublicKey(std::string hex, int bit_length);
 };
 
 #endif

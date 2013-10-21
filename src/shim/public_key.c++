@@ -1,7 +1,6 @@
 #include "public_key.h++"
 
-PublicKey::PublicKey(std::string hex, int length)
+PublicKey::PublicKey(std::string hex, int bit_length)
+    : Point(hex, bit_length)
 {
-    this->length = length;
-    this->hex = hex;
 }

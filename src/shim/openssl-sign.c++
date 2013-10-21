@@ -38,12 +38,13 @@ int main(int argc, char **argv)
         const char *pubkey_str;
 
         pubkey = EC_POINT_new(group);
-        pubkey_str = args->public_key->hex.c_str();
+        pubkey_str = args->public_key->hex_cstr();
 
         ctx = BN_CTX_new();
         pubkey = EC_POINT_hex2point(group, pubkey_str, pubkey, ctx);
         if (EC_KEY_set_public_key(key, pubkey) != 1) {
             std::cerr << "Unable to set public key\n";
+            std::cerr << "pubkey_str: '" << pubkey_str << "'\n";
             return 2;
         }
         BN_CTX_free(ctx);
