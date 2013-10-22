@@ -27,6 +27,11 @@ public:
      * "bit_length". */
     BigInt(std::string hex, int offest, int bit_length);
 
+    /* Generates a new BigInt from a regular integer, which can only
+     * populate the least significant bit but otherwise is
+     * acceptable. */
+    BigInt(int value);
+
     /* Returns this integer as a hex string. */
     std::string hex(void) const;
     const char *hex_cstr(void) const;
@@ -37,6 +42,10 @@ public:
 
     /* Returns this integer as a byte string, not NUL terminated. */
     const unsigned char *byte_str(void) const;
+
+    /* Here's a number of arithmatic operations that can be done on a
+     * BigInt, all of which do their associated operation. */
+    friend BigInt operator+(const BigInt &a, const BigInt &b);
 };
 
 #endif

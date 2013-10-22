@@ -22,6 +22,12 @@ LANGUAGES   += bash
 
 # FIXME: Write tests that actually run using some of my own code.
 
+# Some arithmetic tests for the BigInt
+BINARIES    += bigint
+COMPILEOPTS += -DBIGINT_TEST_HARNESS
+SOURCES     += shim/bigint.c++
+CONFIG      += testbigint
+
 # The remaining tests use OpenSSL to verify that all the crypto code I
 # wrote is actually somewhat sane.
 LANGUAGES   += c++

@@ -1,6 +1,7 @@
 #include "bigint.h++"
 #include <assert.h>
 #include <iostream>
+#include <stack>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -36,6 +37,14 @@ BigInt::BigInt(std::string hex, int offset,
            this->_data + 1,
            this->_data + 2,
            this->_data + 3);
+}
+
+BigInt::BigInt(int value)
+{
+    this->_data[0] = value;
+    this->_data[1] = 0;
+    this->_data[2] = 0;
+    this->_data[3] = 0;
 }
 
 std::string BigInt::hex(void) const
@@ -92,6 +101,25 @@ const unsigned char *BigInt::byte_str(void) const
     return bytes_out;
 }
 
+BigInt operator+(const BigInt &a, const BigInt &b)
+{
+    BigInt out = 0;
+    __uint128_t sum;
+
+    assert(sizeof(a._data[0]) == 8);
+    assert(a.bit_length() == b.bit_length());
+
+    sum = 0;
+    for (int i = (a.bit_length()-1)/64; i >= 0; i--) {
+        sum += a._data[i];
+        sum += b._data[i];
+        out._data[i] = sum;
+        sum >>= 64;
+    }
+
+    return out;
+}
+
 int hex2int(unsigned char c)
 {
     switch (c) {
@@ -121,3 +149,26 @@ int hex2int(unsigned char c)
 
     return -1;
 }
+
+#ifdef BIGINT_TEST_HARNESS
+int main(int argc, char **argv)
+{
+    int i;
+    std::stack<BigInt> stack;
+
+    for (i = 0; i < argc; i++) {
+        if (strcmp(argv[i], "+") == 0) {
+            BigInt a = stack.top(); stack.pop();
+            BigInt b = stack.top(); stack.pop();
+            std::cerr << "sum1 " << a.hex() << "\n";
+            std::cerr << "sum2 " << b.hex() << "\n";
+            stack.push(a + b);
+        } else {
+            stack.push(BigInt(argv[i], BIGINT_BIT_LENGTH));
+            std::cerr << "read " << stack.top().hex() << "\n";
+        }
+    }
+
+    std::cout << stack.top().hex() << "\n";
+}
+#endif
