@@ -7,10 +7,6 @@ COMPILEOPTS += -Wextra
 COMPILEOPTS += -ansi
 COMPILEOPTS += -pedantic
 
-# Build everything as C++11, which is the newest standard.
-LANGUAGES   += c++
-COMPILEOPTS += -std=c++11
-
 # The test harnesses are written (at least partially) in bash
 LANGUAGES   += bash
 
