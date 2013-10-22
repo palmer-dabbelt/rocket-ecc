@@ -120,6 +120,27 @@ BigInt operator+(const BigInt &a, const BigInt &b)
     return out;
 }
 
+BigInt operator*(const BigInt &a, const BigInt &b)
+{
+    BigInt out = 0;
+    __uint128_t sum;
+
+    assert(sizeof(a._data[0]) == 8);
+    assert(a.bit_length() == b.bit_length());
+
+    for (int j = (a.bit_length()-1)/64; j >= 0; j--) {
+        sum = 0;
+        
+        for (int i = j; i >= 0; i--) {
+            sum += a._data[i] * b._data[i];
+            out._data[i] += sum;
+            sum >>= 64;
+        }
+    }
+
+    return out;
+}
+
 int hex2int(unsigned char c)
 {
     switch (c) {
@@ -156,13 +177,21 @@ int main(int argc, char **argv)
     int i;
     std::stack<BigInt> stack;
 
-    for (i = 0; i < argc; i++) {
+    for (i = 1; i < argc; i++) {
+        std::cerr << "argv[" << i << "] = " << argv[i] << "\n";
+
         if (strcmp(argv[i], "+") == 0) {
             BigInt a = stack.top(); stack.pop();
             BigInt b = stack.top(); stack.pop();
             std::cerr << "sum1 " << a.hex() << "\n";
             std::cerr << "sum2 " << b.hex() << "\n";
             stack.push(a + b);
+        } else if (strcmp(argv[i], "x") == 0) {
+            BigInt a = stack.top(); stack.pop();
+            BigInt b = stack.top(); stack.pop();
+            std::cerr << "prod1 " << a.hex() << "\n";
+            std::cerr << "prod2 " << b.hex() << "\n";
+            stack.push(a * b);
         } else {
             stack.push(BigInt(argv[i], BIGINT_BIT_LENGTH));
             std::cerr << "read " << stack.top().hex() << "\n";

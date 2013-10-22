@@ -1,3 +1,4 @@
 TESTSRC += smalladd.bash
 TESTSRC += largeadd.bash
 TESTSRC += randomadd.bash
+TESTSRC += smallprod.bash
