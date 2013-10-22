@@ -2,3 +2,7 @@ TESTSRC += smalladd.bash
 TESTSRC += largeadd.bash
 TESTSRC += randomadd.bash
 TESTSRC += smallprod.bash
+TESTSRC += largeprod.bash
+TESTSRC += largeproda.bash
+TESTSRC += largeprodb.bash
+TESTSRC += randomprod.bash

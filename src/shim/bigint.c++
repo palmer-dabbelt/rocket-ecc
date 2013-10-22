@@ -128,14 +128,22 @@ BigInt operator*(const BigInt &a, const BigInt &b)
     assert(sizeof(a._data[0]) == 8);
     assert(a.bit_length() == b.bit_length());
 
-    for (int j = (a.bit_length()-1)/64; j >= 0; j--) {
-        sum = 0;
-        
-        for (int i = j; i >= 0; i--) {
-            sum += a._data[i] * b._data[i];
-            out._data[i] += sum;
-            sum >>= 64;
+    sum = 0;
+    for (int p = (a.bit_length()-1)/64; p >= 0; p--) {
+        int count, i ,j;
+
+        count = (a.bit_length()/64) - p;
+        i = (a.bit_length()-1)/64 - count + 1;
+        j = (a.bit_length()-1)/64;
+        while (count > 0) {
+            sum += (__uint128_t)(a._data[i]) * (__uint128_t)(b._data[j]);
+            i++;
+            j--;
+            count--;
         }
+
+        out._data[p] = sum;
+        sum >>= 64;
     }
 
     return out;
