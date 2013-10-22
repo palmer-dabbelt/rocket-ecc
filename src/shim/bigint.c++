@@ -114,8 +114,6 @@ const unsigned char *BigInt::byte_str(void) const
 
         *bytes = val;
         bytes++;
-
-        fprintf(stderr, "byte[%d] = %d\n", i, (unsigned char)val);
     }
 
     return bytes_out;
