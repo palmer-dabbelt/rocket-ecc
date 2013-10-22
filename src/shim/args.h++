@@ -11,7 +11,7 @@
 class Args
 {
 public:
-    Curve *curve;
+    const Curve *curve;
     Digest *digest;
     PublicKey *public_key;
     PrivateKey *private_key;

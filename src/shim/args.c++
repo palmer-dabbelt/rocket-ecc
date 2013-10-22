@@ -18,7 +18,7 @@ Args::Args(int argc, char **argv)
             i++;
 
             try {
-                this->curve = new Curve(argv[i]);
+                this->curve = Curve::lookup_curve(argv[i]);
             } catch(InvalidArgument e) {
                 std::cerr << "Error parsing '--curve " << argv[i] << "':\n";
                 std::cerr << "  " << e.reason << "\n";
@@ -91,6 +91,4 @@ Args::Args(int argc, char **argv)
             std::cerr << "Unknown argument '" << argv[i] << "':\n";
         }
     }
-
-    this->curve = new Curve();
 }
