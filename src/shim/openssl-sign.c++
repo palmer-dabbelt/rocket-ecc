@@ -42,9 +42,9 @@ int main(int argc, char **argv)
 
         ctx = BN_CTX_new();
         pubkey = EC_POINT_hex2point(group, pubkey_str, pubkey, ctx);
+        std::cerr << "pubkey_str: '" << pubkey_str << "'\n";
         if (EC_KEY_set_public_key(key, pubkey) != 1) {
             std::cerr << "Unable to set public key\n";
-            std::cerr << "pubkey_str: '" << pubkey_str << "'\n";
             return 2;
         }
         BN_CTX_free(ctx);
@@ -57,6 +57,7 @@ int main(int argc, char **argv)
         privkey_str = args->private_key->hex_cstr();
         privkey = NULL;
         BN_hex2bn(&privkey, privkey_str);
+        std::cerr << "privkey_str: '" << privkey_str << "'\n";
         if (EC_KEY_set_private_key(key, privkey) != 1) {
             std::cerr << "Unable to set private key\n";
             return 2;
@@ -74,6 +75,7 @@ int main(int argc, char **argv)
      * way because we get predictable signatures. */
     kinv = NULL;
     BN_hex2bn(&kinv, args->kinv->hex_cstr());
+    std::cerr << "kinv_str: '" << args->kinv->hex_cstr() << "'\n";
     if (kinv == NULL) {
         std::cerr << "Unable to parse kinv\n";
         return 2;
@@ -81,6 +83,7 @@ int main(int argc, char **argv)
 
     rp = NULL;
     BN_hex2bn(&rp, args->rp->hex_cstr());
+    std::cerr << "rp_str: '" << args->rp->hex_cstr() << "'\n";
     if (rp == NULL) {
         std::cerr << "Unable to parse rp\n";
         return 2;
@@ -90,6 +93,9 @@ int main(int argc, char **argv)
     sig = ECDSA_do_sign_ex(args->digest->byte_str(),
                            args->digest->byte_length(),
                            kinv, rp, key);
+    std::cerr << "digest: '" << args->digest->hex_cstr() << "'\n";
+    std::cerr << "digest_length: " << args->digest->byte_length() << "\n";
+    std::cerr << "digest_hash: " << args->digest->djb_hash() << "\n";
     if (sig == NULL) {
         std::cerr << "Unable to sign digest\n";
         return 2;
@@ -103,6 +109,10 @@ int main(int argc, char **argv)
         verified = ECDSA_do_verify(args->digest->byte_str(),
                                    args->digest->byte_length(),
                                    sig, key);
+
+        std::cerr << "digest: '" << args->digest->hex_cstr() << "'\n";
+        std::cerr << "digest_length: " << args->digest->byte_length() << "\n";
+        std::cerr << "digest_hash: " << args->digest->djb_hash() << "\n";
 
         if (verified != 1) {
             std::cerr << "Unable to verify signature\n";

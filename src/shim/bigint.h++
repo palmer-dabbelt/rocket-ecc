@@ -2,13 +2,21 @@
 #define BIGINT_HXX
 
 #include <string>
+#include <stdint.h>
+
+/* FIXME: This enforces a constant bit length. */
+#ifndef BIGINT_BIT_LENGTH
+#define BIGINT_BIT_LENGTH 256
+#endif
+
+/* This will only work for multiple of 64 bit lengths, but who cares! */
+typedef uint64_t bigint_datum_t;
+#define BIGINT_WORD_LENGTH (BIGINT_BIT_LENGTH / (sizeof(bigint_datum_t) * 8))
 
 class BigInt
 {
 protected:
-    int _bit_length;
-    std::string _hex;
-    unsigned char *_bytes;
+    bigint_datum_t _data[BIGINT_WORD_LENGTH];
 
 public:
     /* Generates a new BigInt from a hex string. */
@@ -29,10 +37,6 @@ public:
 
     /* Returns this integer as a byte string, not NUL terminated. */
     const unsigned char *byte_str(void) const;
-
-private:
-    /* Shared initialization code for a BigInt. */
-    void initialize(std::string hex, int bit_length);
 };
 
 #endif
