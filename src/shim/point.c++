@@ -27,8 +27,11 @@ std::string Point::y_hex(void) const
 const char *Point::hex_cstr(void) const
 {
     char *out;
+    int r;
 
-    asprintf(&out, "04%s%s", this->x_hex().c_str(), this->y_hex().c_str());
+    r = asprintf(&out, "04%s%s", this->x_hex().c_str(), this->y_hex().c_str());
+    if (r <= 0)
+        abort();
 
     return out;
 }
