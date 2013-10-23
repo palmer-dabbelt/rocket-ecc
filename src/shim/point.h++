@@ -2,12 +2,14 @@
 #define POINT_HXX
 
 #include "bigint.h++"
+#include "curve.h++"
 
 #include <string>
 
 class Point
 {
 protected:
+    const Curve *_c;
     BigInt _x;
     BigInt _y;
 
@@ -15,7 +17,7 @@ public:
     /* This constructs a new EC point from a single long string.  Here
      * "bit_length" is actually the length of a single int in the
      * point. */
-    Point(std::string hex, int bit_length);
+    Point(std::string hex, const Curve *c);
 
     /* Returns each integer as a string. */
     std::string x_hex(void) const;

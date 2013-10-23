@@ -6,11 +6,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-Point::Point(std::string hex, int bit_length)
-    : _x(hex, 8             , bit_length),
-      _y(hex, bit_length + 8, bit_length)
+Point::Point(std::string hex, const Curve *c)
+    : _x(hex, 8                  , c->bit_length()),
+      _y(hex, c->bit_length() + 8, c->bit_length())
 {
-    assert(hex.length() == ((size_t)bit_length / 2) + 2);
+    this->_c = c;
+    assert(hex.length() == ((size_t)c->bit_length() / 2) + 2);
 }
 
 std::string Point::x_hex(void) const

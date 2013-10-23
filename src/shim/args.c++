@@ -27,7 +27,7 @@ Args::Args(int argc, char **argv)
             i++;
 
             try {
-                this->public_key = new PublicKey(argv[i], curve->bit_length());
+                this->public_key = new PublicKey(argv[i], this->curve);
             } catch(InvalidArgument e) {
                 std::cerr << "Error parsing '--pubkey " << argv[i] << "':\n";
                 std::cerr << "  " << e.reason << "\n";

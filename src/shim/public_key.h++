@@ -2,13 +2,14 @@
 #define PUBILC_KEY_HXX
 
 #include "point.h++"
+#include "curve.h++"
 
 #include <string>
 
 class PublicKey: public Point
 {
 public:
-    PublicKey(std::string hex, int bit_length);
+    PublicKey(std::string hex, const Curve *c);
 };
 
 #endif
