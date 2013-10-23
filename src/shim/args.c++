@@ -10,7 +10,7 @@ Args::Args(int argc, char **argv)
     int i;
 
     /* Set default values for everything. */
-    this->curve = NULL;
+    this->curve = Curve::lookup_curve("p256k1");
     this->digest = NULL;
 
     for (i = 1; i < argc; i++) {

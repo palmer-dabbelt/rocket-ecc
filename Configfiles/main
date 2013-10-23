@@ -37,6 +37,7 @@ LINKOPTS    += -ldl
 
 BINARIES    += openssl-genkey
 SOURCES     += shim/openssl-genkey.c++
+TESTSRC     += simple.bash
 
 BINARIES    += openssl-sign
 SOURCES     += shim/openssl-sign.c++
