@@ -46,7 +46,12 @@ public:
     /* Here's a number of arithmatic operations that can be done on a
      * BigInt, all of which do their associated operation. */
     friend BigInt operator+(const BigInt &a, const BigInt &b);
+    friend BigInt operator-(const BigInt &a, const BigInt &b);
     friend BigInt operator*(const BigInt &a, const BigInt &b);
+
+    /* Some logical operators, which can be useful for many things
+     * (including but not limited to some of the operations above). */
+    BigInt operator~(void) const;
 };
 
 #endif

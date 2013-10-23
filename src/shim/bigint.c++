@@ -41,10 +41,10 @@ BigInt::BigInt(std::string hex, int offset,
 
 BigInt::BigInt(int value)
 {
-    this->_data[0] = value;
+    this->_data[0] = 0;
     this->_data[1] = 0;
     this->_data[2] = 0;
-    this->_data[3] = 0;
+    this->_data[3] = value;
 }
 
 std::string BigInt::hex(void) const
@@ -120,6 +120,11 @@ BigInt operator+(const BigInt &a, const BigInt &b)
     return out;
 }
 
+BigInt operator-(const BigInt &a, const BigInt &b)
+{
+    return a + (~b) + 1;
+}
+
 BigInt operator*(const BigInt &a, const BigInt &b)
 {
     BigInt out = 0;
@@ -145,6 +150,17 @@ BigInt operator*(const BigInt &a, const BigInt &b)
         out._data[p] = sum;
         sum >>= 64;
     }
+
+    return out;
+}
+
+BigInt BigInt::operator~(void) const
+{
+    BigInt out = 0;
+
+    assert (this->bit_length() == out.bit_length());
+    for (int i = 0; i < this->bit_length()/64; i++)
+        out._data[i] = ~this->_data[i];
 
     return out;
 }
@@ -194,6 +210,12 @@ int main(int argc, char **argv)
             std::cerr << "sum1 " << a.hex() << "\n";
             std::cerr << "sum2 " << b.hex() << "\n";
             stack.push(a + b);
+        } else if (strcmp(argv[i], "-") == 0) {
+            BigInt a = stack.top(); stack.pop();
+            BigInt b = stack.top(); stack.pop();
+            std::cerr << "diff1 " << a.hex() << "\n";
+            std::cerr << "diff2 " << b.hex() << "\n";
+            stack.push(a - b);
         } else if (strcmp(argv[i], "x") == 0) {
             BigInt a = stack.top(); stack.pop();
             BigInt b = stack.top(); stack.pop();

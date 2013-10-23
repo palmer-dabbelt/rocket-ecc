@@ -1,6 +1,11 @@
 TESTSRC += smalladd.bash
 TESTSRC += largeadd.bash
 TESTSRC += randomadd.bash
+
+TESTSRC += smallsub.bash
+TESTSRC += largesub.bash
+TESTSRC += randomsub.bash
+
 TESTSRC += smallprod.bash
 TESTSRC += largeprod.bash
 TESTSRC += largeproda.bash
