@@ -49,15 +49,15 @@ public:
 
     /* Returns the size of this curve, which is the actual bit size
      * (not the security parameter). */
-    int bit_length(void) const;
+    int bit_length(void) const { return _bit_length; }
 
     /* The parameters of this curve, as defined by NIST. */
-    BigInt p(void) const;
-    BigInt a(void) const;
-    BigInt b(void) const;
-    BigInt x_G(void) const;
-    BigInt y_G(void) const;
-    BigInt q(void) const;
+    BigInt p(void) const { return _p; }
+    BigInt a(void) const { return _a; }
+    BigInt b(void) const { return _b; }
+    BigInt x_G(void) const { return _x_G; }
+    BigInt y_G(void) const { return _y_G; }
+    BigInt q(void) const { return _q; }
 
 };
 

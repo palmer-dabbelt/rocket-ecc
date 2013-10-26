@@ -39,6 +39,14 @@ BigInt::BigInt(std::string hex, int offset,
            this->_data + 3);
 }
 
+BigInt::BigInt(const BigInt &other)
+{
+    assert(this->bit_length() == other.bit_length());
+
+    for (size_t i = 0; i < BIGINT_WORD_LENGTH; i++)
+        this->_data[i] = other._data[i];
+}
+
 BigInt::BigInt(int value)
 {
     this->_data[0] = 0;
@@ -63,16 +71,6 @@ std::string BigInt::hex(void) const
 const char *BigInt::hex_cstr(void) const
 {
     return strdup(this->hex().c_str());
-}
-
-int BigInt::bit_length(void) const
-{
-    return BIGINT_BIT_LENGTH;
-}
-
-int BigInt::byte_length(void) const
-{
-    return BIGINT_BIT_LENGTH / 8;
 }
 
 const unsigned char *BigInt::byte_str(void) const

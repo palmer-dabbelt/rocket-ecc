@@ -1,8 +1,8 @@
 #ifndef POINT_HXX
 #define POINT_HXX
 
-#include "bigint.h++"
 #include "curve.h++"
+#include "modint.h++"
 
 #include <string>
 
@@ -10,8 +10,8 @@ class Point
 {
 protected:
     const Curve *_c;
-    BigInt _x;
-    BigInt _y;
+    ModInt _x;
+    ModInt _y;
 
 public:
     /* This constructs a new EC point from a single long string.  Here
@@ -19,12 +19,16 @@ public:
      * point. */
     Point(std::string hex, const Curve *c);
 
-    /* Returns each integer as a string. */
-    std::string x_hex(void) const;
-    const char *x_hex_cstr(void) const;
+    /* Simply returns the components of this point. */
+    ModInt x(void) const { return _x; }
+    ModInt y(void) const { return _y; }
 
-    std::string y_hex(void) const;
-    const char *y_hex_cstr(void) const;
+    /* Returns each integer as a string. */
+    std::string x_hex(void) const { return _x.hex(); }
+    const char *x_hex_cstr(void) const { return _x.hex_cstr(); }
+
+    std::string y_hex(void) const { return _y.hex(); }
+    const char *y_hex_cstr(void) const { return _y.hex_cstr(); }
 
     /* Returns the pair of integers joined as a hex string, or a a C
      * string. */

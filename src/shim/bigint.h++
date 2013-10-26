@@ -27,6 +27,9 @@ public:
      * "bit_length". */
     BigInt(std::string hex, int offest, int bit_length);
 
+    /* A simple BigInt copy constructor. */
+    BigInt(const BigInt &other);
+
     /* Generates a new BigInt from a regular integer, which can only
      * populate the least significant bit but otherwise is
      * acceptable. */
@@ -37,8 +40,8 @@ public:
     const char *hex_cstr(void) const;
 
     /* Returns the length of this interger. */
-    int bit_length(void) const;
-    int byte_length(void) const;
+    int bit_length(void) const { return BIGINT_BIT_LENGTH; }
+    int byte_length(void) const { return BIGINT_BIT_LENGTH / 8; }
 
     /* Returns this integer as a byte string, not NUL terminated. */
     const unsigned char *byte_str(void) const;
@@ -52,6 +55,16 @@ public:
     /* Some logical operators, which can be useful for many things
      * (including but not limited to some of the operations above). */
     BigInt operator~(void) const;
+
+    /* Some comparison operators. */
+    friend bool operator!=(const BigInt &a, const BigInt &b);
+    friend bool operator>(const BigInt &a, const BigInt &b);
+
+    /* This is a fused multiply+mod operation.  Effectively it's "(a +
+     * b) % m", but faster. */
+    static BigInt monty_mult(const BigInt &a,
+                             const BigInt &b,
+                             const BigInt &m);
 };
 
 #endif

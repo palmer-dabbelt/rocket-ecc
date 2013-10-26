@@ -39,11 +39,6 @@ Curve::Curve(std::string p_hex,
     this->_type = type;
 }
 
-int Curve::bit_length(void) const
-{
-    return _bit_length;
-}
-
 #ifdef HAVE_OPENSSL
 int Curve::openssl_name(void) const
 {
