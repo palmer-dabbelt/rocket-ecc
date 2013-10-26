@@ -22,6 +22,8 @@ BigInt::BigInt(std::string hex,
            this->_data + 1,
            this->_data + 2,
            this->_data + 3);
+
+    this->_overflow = false;
 }
 
 BigInt::BigInt(std::string hex, int offset,
@@ -37,6 +39,8 @@ BigInt::BigInt(std::string hex, int offset,
            this->_data + 1,
            this->_data + 2,
            this->_data + 3);
+
+    this->_overflow = false;
 }
 
 BigInt::BigInt(const BigInt &other)
@@ -45,6 +49,8 @@ BigInt::BigInt(const BigInt &other)
 
     for (size_t i = 0; i < BIGINT_WORD_LENGTH; i++)
         this->_data[i] = other._data[i];
+
+    this->_overflow = other._overflow;
 }
 
 BigInt::BigInt(int value)
@@ -53,6 +59,8 @@ BigInt::BigInt(int value)
     this->_data[1] = 0;
     this->_data[2] = 0;
     this->_data[3] = value;
+
+    this->_overflow = false;
 }
 
 std::string BigInt::hex(void) const
@@ -115,12 +123,21 @@ BigInt operator+(const BigInt &a, const BigInt &b)
         sum >>= 64;
     }
 
+    out._overflow = (sum > 0) || a._overflow || b._overflow;
+
     return out;
 }
 
 BigInt operator-(const BigInt &a, const BigInt &b)
 {
-    return a + (~b) + 1;
+    BigInt out(a + (~b) + 1);
+
+    if (a >= b)
+        out._overflow = false;
+    else
+        out._overflow = true;
+
+    return out;
 }
 
 BigInt operator*(const BigInt &a, const BigInt &b)
@@ -148,6 +165,8 @@ BigInt operator*(const BigInt &a, const BigInt &b)
         out._data[p] = sum;
         sum >>= 64;
     }
+
+    out._overflow = (sum > 0) || a._overflow || b._overflow;
 
     return out;
 }
@@ -183,6 +202,11 @@ bool operator>(const BigInt &a, const BigInt &b)
 {
     assert(a.bit_length() == b.bit_length());
 
+    if (a._overflow && !b._overflow)
+        return true;
+    if (!a._overflow && b._overflow)
+        return false;
+
     for (size_t i = 0; i < BIGINT_WORD_LENGTH; i++) {
         if (a._data[i] > b._data[i])
             return true;
@@ -191,6 +215,25 @@ bool operator>(const BigInt &a, const BigInt &b)
     }
 
     return false;
+}
+
+bool operator>=(const BigInt &a, const BigInt &b)
+{
+    assert(a.bit_length() == b.bit_length());
+
+    if (a._overflow && !b._overflow)
+        return true;
+    if (!a._overflow && b._overflow)
+        return false;
+
+    for (size_t i = 0; i < BIGINT_WORD_LENGTH; i++) {
+        if (a._data[i] > b._data[i])
+            return true;
+        if (a._data[i] < b._data[i])
+            return false;
+    }
+
+    return true;
 }
 
 int hex2int(unsigned char c)
@@ -256,6 +299,6 @@ int main(int argc, char **argv)
         }
     }
 
-    std::cout << stack.top().hex() << "\n";
+    std::cout << stack.top().hex() << " " << stack.top().of_str() << "\n";
 }
 #endif

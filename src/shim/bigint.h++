@@ -17,6 +17,7 @@ class BigInt
 {
 protected:
     bigint_datum_t _data[BIGINT_WORD_LENGTH];
+    bool _overflow;
 
 public:
     /* Generates a new BigInt from a hex string. */
@@ -46,6 +47,11 @@ public:
     /* Returns this integer as a byte string, not NUL terminated. */
     const unsigned char *byte_str(void) const;
 
+    /* Returns TRUE if there has been any overflow while computing
+     * this integer, FALSE otherwise. */
+    bool overflow(void) const { return _overflow; }
+    std::string of_str(void) const { return _overflow ? "true" : "false"; }
+
     /* Here's a number of arithmatic operations that can be done on a
      * BigInt, all of which do their associated operation. */
     friend BigInt operator+(const BigInt &a, const BigInt &b);
@@ -60,6 +66,7 @@ public:
     friend bool operator==(const BigInt &a, const BigInt &b);
     friend bool operator!=(const BigInt &a, const BigInt &b);
     friend bool operator>(const BigInt &a, const BigInt &b);
+    friend bool operator>=(const BigInt &a, const BigInt &b);
 
     /* This is a fused multiply+mod operation.  Effectively it's "(a +
      * b) % m", but faster. */
