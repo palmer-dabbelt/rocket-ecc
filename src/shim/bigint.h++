@@ -57,6 +57,7 @@ public:
     BigInt operator~(void) const;
 
     /* Some comparison operators. */
+    friend bool operator==(const BigInt &a, const BigInt &b);
     friend bool operator!=(const BigInt &a, const BigInt &b);
     friend bool operator>(const BigInt &a, const BigInt &b);
 

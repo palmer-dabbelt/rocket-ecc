@@ -34,6 +34,10 @@ public:
      * string. */
     std::string hex_str(void) const;
     const char *hex_cstr(void) const;
+
+    /* These arithmatic operators compute the geometric definition of
+     * elliptic curve field operations. */
+    friend Point operator+(const Point &a, const Point &b);
 };
 
 #endif

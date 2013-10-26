@@ -12,8 +12,10 @@ private:
     BigInt _mod;
 
 public:
+    /* These constructors are effectively the same as the BigInt
+     * constructors but they contain an extra mod parameter. */
+    ModInt(std::string hex, int bit_length, BigInt mod);
     ModInt(std::string hex, int offest, int bit_length, BigInt mod);
-
     ModInt(BigInt data, BigInt mod);
 
     /* Returns this integer as a hex string (the data, not the

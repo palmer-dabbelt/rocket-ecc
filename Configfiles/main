@@ -28,6 +28,12 @@ COMPILEOPTS += -DBIGINT_TEST_HARNESS
 SOURCES     += shim/bigint.c++
 CONFIG      += testbigint
 
+# Some arithmetic tests for the ModInt
+BINARIES    += modint
+COMPILEOPTS += -DMODINT_TEST_HARNESS
+SOURCES     += shim/modint.c++
+CONFIG      += testmodint
+
 # The remaining tests use OpenSSL to verify that all the crypto code I
 # wrote is actually somewhat sane.
 LANGUAGES   += c++

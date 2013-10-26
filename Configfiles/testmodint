@@ -1,0 +1,3 @@
+TESTSRC += smalladd.bash
+TESTSRC += smalladdmod.bash
+TESTSRC += randomadd.bash

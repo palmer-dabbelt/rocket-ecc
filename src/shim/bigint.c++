@@ -163,6 +163,36 @@ BigInt BigInt::operator~(void) const
     return out;
 }
 
+bool operator==(const BigInt &a, const BigInt &b)
+{
+    assert(a.bit_length() == b.bit_length());
+
+    for (size_t i = 0; i < BIGINT_WORD_LENGTH; i++)
+        if (a._data[i] != b._data[i])
+            return false;
+
+    return true;
+}
+
+bool operator!=(const BigInt &a, const BigInt &b)
+{
+    return !(a == b);
+}
+
+bool operator>(const BigInt &a, const BigInt &b)
+{
+    assert(a.bit_length() == b.bit_length());
+
+    for (size_t i = 0; i < BIGINT_WORD_LENGTH; i++) {
+        if (a._data[i] > b._data[i])
+            return true;
+        if (a._data[i] < b._data[i])
+            return false;
+    }
+
+    return false;
+}
+
 int hex2int(unsigned char c)
 {
     switch (c) {
