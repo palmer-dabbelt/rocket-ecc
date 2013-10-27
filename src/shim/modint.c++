@@ -49,9 +49,7 @@ ModInt operator*(const ModInt &a, const ModInt &b)
     if (a._mod != b._mod)
         throw "Mis-matched modulus";
 
-    ModInt out(BigInt::monty_mult(a._data, b._data, a._mod), a._mod);
-
-    return out;
+    return ModInt((a._data * b._data) % a._mod, a._mod);
 }
 
 #ifdef MODINT_TEST_HARNESS

@@ -72,14 +72,6 @@ public:
         { return !(a >= b); }
     friend bool operator<=(const BigInt &a, const BigInt &b)
         { return !(a > b); }
-
-    /* This is a fused multiply+mod operation.  Effectively it's "(a +
-     * b) % m", but faster. */
-    /* FIXME: This should be implemented. */
-    static BigInt monty_mult(const BigInt &a,
-                             const BigInt &b,
-                             const BigInt &m)
-        { return (a * b) % m; }
 };
 
 #endif
