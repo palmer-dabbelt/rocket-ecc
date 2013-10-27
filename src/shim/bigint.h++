@@ -57,7 +57,7 @@ public:
     friend BigInt operator+(const BigInt &a, const BigInt &b);
     friend BigInt operator-(const BigInt &a, const BigInt &b);
     friend BigInt operator*(const BigInt &a, const BigInt &b);
-    friend BigInt operator%(const BigInt &x, const BigInt &m);
+    friend BigInt operator%(const BigInt &a, const BigInt &b);
 
     /* Some logical operators, which can be useful for many things
      * (including but not limited to some of the operations above). */

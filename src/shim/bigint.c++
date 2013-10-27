@@ -171,27 +171,6 @@ BigInt operator*(const BigInt &a, const BigInt &b)
     return out;
 }
 
-/* FIXME: This is sort of a hack, but it effectively lets use most of
- * the goodness without having some terrible edge cases.  This stuff
- * is all used by crypto algorithms so the moduli are going to be
- * fairly large (large enough such that 2*data can't be larger than
- * mod).  While I could stick this in a while loop to reduce anything,
- * it'd be pretty terrible (O(2^256) operations) in some cases, so I
- * choose not to. */
-BigInt operator%(const BigInt &x, const BigInt &m)
-{
-    BigInt o = x;
-
-    if (o >= m)
-        o = o - m;
-
-    assert(o < m);
-    if (o >= m)
-        throw "BigInt%BigInt not implemented for x > 2*m";
-
-    return o;
-}
-
 BigInt BigInt::operator~(void) const
 {
     BigInt out = 0;
