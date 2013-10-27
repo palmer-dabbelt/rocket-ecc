@@ -7,3 +7,9 @@ TESTSRC += smallsub.bash
 TESTSRC += smallsubmod.bash
 TESTSRC += randomsub.bash
 TESTSRC += randomsubof.bash
+
+#TESTSRC += randomprod1.bash
+#TESTSRC += randomprod2.bash
+#TESTSRC += randomprod3.bash
+#TESTSRC += randomprod4.bash
+#TESTSRC += randomprod5.bash

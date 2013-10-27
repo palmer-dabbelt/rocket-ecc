@@ -92,10 +92,8 @@ ModInt operator-(const ModInt &a, const ModInt &b)
 
 ModInt operator*(const ModInt &a, const ModInt &b)
 {
-    if (a._mod != b._mod)
-        throw "Mis-matched modulus";
-
-    return ModInt((a._data * b._data) % a._mod, a._mod);
+    assert(false);
+    return a + b;
 }
 
 #ifdef MODINT_TEST_HARNESS
@@ -120,14 +118,12 @@ int main(int argc, char **argv)
             std::cerr << "diff1 " << a.hex() << "\n";
             std::cerr << "diff2 " << b.hex() << "\n";
             stack.push(a - b);
-#if 0
         } else if (strcmp(argv[i], "x") == 0) {
             ModInt a = stack.top(); stack.pop();
             ModInt b = stack.top(); stack.pop();
             std::cerr << "prod1 " << a.hex() << "\n";
             std::cerr << "prod2 " << b.hex() << "\n";
             stack.push(a * b);
-#endif
         } else {
             stack.push(ModInt(argv[i], BIGINT_BIT_LENGTH, mod));
             std::cerr << "read " << stack.top().hex() << "\n";
