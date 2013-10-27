@@ -55,23 +55,47 @@ public:
     bool overflow(void) const { return _overflow; }
     std::string of_str(void) const { return _overflow ? "true" : "false"; }
 
+    /* Allows for the manipulation of BigInt bit widths. */
+    BigInt extend(int new_bit_length) const;
+    BigInt extend2x(void) const { return extend(bit_length() * 2); }
+
+    BigInt trunc(int new_bit_length) const;
+    BigInt trunc2x(void) const { return trunc(bit_length() / 2); }
+    friend BigInt trunc2x(const BigInt &i) { return i.trunc2x(); }
+
     /* Here's a number of arithmatic operations that can be done on a
      * BigInt, all of which do their associated operation. */
     friend BigInt operator+(const BigInt &a, const BigInt &b);
     friend BigInt operator-(const BigInt &a, const BigInt &b);
     friend BigInt operator*(const BigInt &a, const BigInt &b);
+    friend BigInt operator%(const BigInt &a, const BigInt &b);
 
     /* Some logical operators, which can be useful for many things
      * (including but not limited to some of the operations above). */
     BigInt operator~(void) const;
+    BigInt operator<<(int i) const;
 
     /* Some comparison operators. */
     friend bool operator==(const BigInt &a, const BigInt &b);
-    friend bool operator!=(const BigInt &a, const BigInt &b);
+    friend bool operator==(const BigInt &a, int b)
+        { return a == BigInt(b, a.bit_length()); }
+    friend bool operator==(int a, const BigInt &b)
+        { return BigInt(a, b.bit_length()) == b; }
+
+    friend bool operator!=(const BigInt &a, const BigInt &b)
+        { return !(a == b); }
+    friend bool operator!=(const BigInt &a, int b)
+        { return a != BigInt(b, a.bit_length()); }
+    friend bool operator!=(int a, const BigInt &b)
+        { return BigInt(a, b.bit_length()) != b; }
+
     friend bool operator>(const BigInt &a, const BigInt &b);
+
     friend bool operator>=(const BigInt &a, const BigInt &b);
+
     friend bool operator<(const BigInt &a, const BigInt &b)
         { return !(a >= b); }
+
     friend bool operator<=(const BigInt &a, const BigInt &b)
         { return !(a > b); }
 };

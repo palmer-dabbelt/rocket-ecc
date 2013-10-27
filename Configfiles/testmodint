@@ -8,8 +8,14 @@ TESTSRC += smallsubmod.bash
 TESTSRC += randomsub.bash
 TESTSRC += randomsubof.bash
 
-#TESTSRC += randomprod1.bash
-#TESTSRC += randomprod2.bash
-#TESTSRC += randomprod3.bash
-#TESTSRC += randomprod4.bash
-#TESTSRC += randomprod5.bash
+TESTSRC += randomprod1.bash
+TESTSRC += randomprod2.bash
+TESTSRC += randomprod3.bash
+TESTSRC += randomprod4.bash
+TESTSRC += randomprod5.bash
+
+TESTSRC += smallprod1.bash
+TESTSRC += smallprod2.bash
+TESTSRC += smallprod3.bash
+TESTSRC += smallprod4.bash
+TESTSRC += smallprod5.bash

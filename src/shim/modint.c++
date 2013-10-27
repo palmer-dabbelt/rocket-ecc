@@ -4,69 +4,24 @@
 #include <iostream>
 #include <string.h>
 #include <assert.h>
+#include <stdio.h>
 
 ModInt::ModInt(std::string hex, int bit_length, BigInt mod)
-    : _data(hex, bit_length),
+    : _data(BigInt(hex, bit_length) % mod),
       _mod(mod)
 {
-    /* FIXME: This is sort of a hack, but it effectively lets use most
-     * of the goodness without having some terrible edge cases.  This
-     * stuff is all used by crypto algorithms so the moduli are going
-     * to be fairly large (large enough such that 2*data can't be
-     * larger than mod).  While I could stick this in a while loop to
-     * reduce anything, it'd be pretty terrible (O(2^256) operations)
-     * in some cases, so I choose not to.  Also, I can't delegate
-     * constructors in ANSI C++ so I have to duplicate this three
-     * times... :( */
-    if (_data >= _mod)
-        _data = _data - mod;
-
-    assert (_data < _mod);
-    if (_data >= _mod)
-        throw "data must be less that mod";
-    
 }
 
 ModInt::ModInt(std::string hex, int offset, int bit_length, BigInt mod)
-    : _data(hex, offset, bit_length),
+    : _data(BigInt(hex, offset, bit_length) % mod),
       _mod(mod)
 {
-    /* FIXME: This is sort of a hack, but it effectively lets use most
-     * of the goodness without having some terrible edge cases.  This
-     * stuff is all used by crypto algorithms so the moduli are going
-     * to be fairly large (large enough such that 2*data can't be
-     * larger than mod).  While I could stick this in a while loop to
-     * reduce anything, it'd be pretty terrible (O(2^256) operations)
-     * in some cases, so I choose not to.  Also, I can't delegate
-     * constructors in ANSI C++ so I have to duplicate this three
-     * times... :( */
-    if (_data >= _mod)
-        _data = _data - mod;
-
-    assert (_data < _mod);
-    if (_data >= _mod)
-        throw "data must be less that mod";
 }
 
 ModInt::ModInt(BigInt data, BigInt mod)
     : _data(data),
       _mod(mod)
 {
-    /* FIXME: This is sort of a hack, but it effectively lets use most
-     * of the goodness without having some terrible edge cases.  This
-     * stuff is all used by crypto algorithms so the moduli are going
-     * to be fairly large (large enough such that 2*data can't be
-     * larger than mod).  While I could stick this in a while loop to
-     * reduce anything, it'd be pretty terrible (O(2^256) operations)
-     * in some cases, so I choose not to.  Also, I can't delegate
-     * constructors in ANSI C++ so I have to duplicate this three
-     * times... :( */
-    if (_data >= _mod)
-        _data = _data - mod;
-
-    assert (_data < _mod);
-    if (_data >= _mod)
-        throw "data must be less that mod";
 }
 
 ModInt operator+(const ModInt &a, const ModInt &b)
@@ -92,8 +47,13 @@ ModInt operator-(const ModInt &a, const ModInt &b)
 
 ModInt operator*(const ModInt &a, const ModInt &b)
 {
-    assert(false);
-    return a + b;
+    assert(a._mod == b._mod);
+
+    BigInt ade = a._data.extend2x();
+    BigInt bde = b._data.extend2x();
+    BigInt me  = a._mod.extend2x();
+
+    return ModInt(trunc2x((ade * bde) % me), a._mod);
 }
 
 #ifdef MODINT_TEST_HARNESS

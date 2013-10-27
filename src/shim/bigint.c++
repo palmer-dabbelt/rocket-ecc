@@ -55,12 +55,10 @@ BigInt::BigInt(int value, int bit_length)
     : _bit_length(bit_length),
       _overflow(false)
 {
-    assert(bit_length == 256);
+    for (int i = 0; i < this->word_length(); i++)
+        this->_data[i] = 0;
 
-    this->_data[0] = 0;
-    this->_data[1] = 0;
-    this->_data[2] = 0;
-    this->_data[3] = value;
+    this->_data[this->word_length() - 1] = value;
 }
 
 std::string BigInt::hex(void) const
@@ -106,6 +104,30 @@ const unsigned char *BigInt::byte_str(void) const
     }
 
     return bytes_out;
+}
+
+BigInt BigInt::extend(int new_bit_length) const
+{
+    BigInt out(0, new_bit_length);
+    assert(new_bit_length >= this->bit_length());
+
+    int offset = out.word_length() - this->word_length();
+    for (int i = 0; i < this->word_length(); i++)
+        out._data[i + offset] = this->_data[i];
+
+    return out;
+}
+
+BigInt BigInt::trunc(int new_bit_length) const
+{
+    BigInt out(0, new_bit_length);
+    assert(new_bit_length <= this->bit_length());
+
+    int offset = this->word_length() - out.word_length();
+    for (int i = 0; i < this->word_length(); i++)
+        out._data[i] = this->_data[i + offset];
+
+    return out;
 }
 
 BigInt operator+(const BigInt &a, const BigInt &b)
@@ -170,6 +192,45 @@ BigInt operator*(const BigInt &a, const BigInt &b)
     return out;
 }
 
+BigInt operator%(const BigInt &x, const BigInt &m)
+{
+    assert(m != 0);
+    assert(x.bit_length() == m.bit_length());
+
+    /* These two are special cases: the ModInt initialization code
+     * calls this operator a whole bunch of times and I don't want to
+     * bust out a whole shift/mod thing if I don't have to.  Usually
+     * ModInt calls it with one of these two enabled, so this makes it
+     * easier. */
+#ifndef SKIP_SHORT_MOD
+    if (x < m)
+        return x;
+    if (x - m < m)
+        return x - m;
+
+    assert(x > m);
+#endif
+
+    BigInt rem(x);
+    BigInt acc(0, x.bit_length());
+
+    for (int i = x.bit_length()-1; i >= 0; i--) {
+        BigInt tri = m << i;
+
+        acc = acc + acc;
+        if (rem > tri) {
+            rem = rem - tri;
+            acc = acc + m;
+        }
+        
+    }
+
+    if (rem >= m)
+        return rem - m;
+
+    return rem;
+}
+
 BigInt BigInt::operator~(void) const
 {
     BigInt out(0, this->bit_length());
@@ -177,6 +238,16 @@ BigInt BigInt::operator~(void) const
     assert (this->bit_length() == out.bit_length());
     for (int i = 0; i < this->bit_length()/64; i++)
         out._data[i] = ~this->_data[i];
+
+    return out;
+}
+
+BigInt BigInt::operator<<(int i) const
+{
+    BigInt out(*this);
+
+    for (i = i; i > 0; i--)
+        out = out + out;
 
     return out;
 }
@@ -190,11 +261,6 @@ bool operator==(const BigInt &a, const BigInt &b)
             return false;
 
     return true;
-}
-
-bool operator!=(const BigInt &a, const BigInt &b)
-{
-    return !(a == b);
 }
 
 bool operator>(const BigInt &a, const BigInt &b)
