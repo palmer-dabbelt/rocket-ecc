@@ -125,7 +125,7 @@ int main(int argc, char **argv)
     {
         signature = new Signature(BN_bn2hex(sig->r),
                                   BN_bn2hex(sig->s),
-                                  i2d_ECDSA_SIG(sig, NULL));
+                                  args->curve->bit_length());
     }
 
     std::cout << "--r " << signature->r() << "\n";
