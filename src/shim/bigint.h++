@@ -14,6 +14,8 @@ typedef uint64_t bigint_datum_t;
 #define BIGINT_MAX_WORD_LENGTH \
     (BIGINT_MAX_BIT_LENGTH / (sizeof(bigint_datum_t) * 8))
 
+typedef __uint128_t bigint_double_datum_t;
+
 class BigInt
 {
 protected:

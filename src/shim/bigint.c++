@@ -135,13 +135,13 @@ BigInt operator+(const BigInt &a, const BigInt &b)
     assert(sizeof(a._data[0]) == 8);
     assert(a.bit_length() == b.bit_length());
 
-    __uint128_t sum = 0;
+    bigint_double_datum_t sum = 0;
     BigInt out(0, a.bit_length());
-    for (int i = (a.bit_length()-1)/64; i >= 0; i--) {
+    for (int i = a.word_length()-1; i >= 0; i--) {
         sum += a._data[i];
         sum += b._data[i];
         out._data[i] = sum;
-        sum >>= 64;
+        sum >>= sizeof(sum) * 4;
     }
 
     out._overflow = (sum > 0) || a._overflow || b._overflow;
@@ -169,22 +169,23 @@ BigInt operator*(const BigInt &a, const BigInt &b)
     assert(a.bit_length() == b.bit_length());
 
     BigInt out(0, a.bit_length());
-    __uint128_t  sum = 0;
-    for (int p = (a.bit_length()-1)/64; p >= 0; p--) {
+    bigint_double_datum_t  sum = 0;
+    for (int p = a.word_length()-1; p >= 0; p--) {
         int count, i ,j;
 
-        count = (a.bit_length()/64) - p;
-        i = (a.bit_length()-1)/64 - count + 1;
-        j = (a.bit_length()-1)/64;
+        count = a.word_length() - p;
+        i = a.word_length() - count;
+        j = a.word_length() - 1;
         while (count > 0) {
-            sum += (__uint128_t)(a._data[i]) * (__uint128_t)(b._data[j]);
+            sum += (bigint_double_datum_t)(a._data[i])
+                   * (bigint_double_datum_t)(b._data[j]);
             i++;
             j--;
             count--;
         }
 
         out._data[p] = sum;
-        sum >>= 64;
+        sum >>= sizeof(sum) * 4;
     }
 
     out._overflow = (sum > 0) || a._overflow || b._overflow;
@@ -236,7 +237,7 @@ BigInt BigInt::operator~(void) const
     BigInt out(0, this->bit_length());
 
     assert (this->bit_length() == out.bit_length());
-    for (int i = 0; i < this->bit_length()/64; i++)
+    for (int i = 0; i < this->word_length(); i++)
         out._data[i] = ~this->_data[i];
 
     return out;
