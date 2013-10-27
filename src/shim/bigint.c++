@@ -9,64 +9,65 @@
 /* Converts a hex character to an integer value. */
 static int hex2int(unsigned char c);
 
-BigInt::BigInt(std::string hex,
-               int bit_length __attribute__((unused)))
+BigInt::BigInt(std::string hex, int bit_length)
+    : _bit_length(bit_length),
+      _overflow(false)
 {
     const char *str;
 
     str = hex.c_str();
 
-    assert(BIGINT_BIT_LENGTH == 256);
+    assert(this->bit_length() == 256);
     sscanf(str, "%016lx%016lx%016lx%016lx",
            this->_data + 0,
            this->_data + 1,
            this->_data + 2,
            this->_data + 3);
-
-    this->_overflow = false;
 }
 
-BigInt::BigInt(std::string hex, int offset,
-               int bit_length __attribute__((unused)))
+BigInt::BigInt(std::string hex, int offset, int bit_length)
+    : _bit_length(bit_length),
+      _overflow(false)
 {
     const char *str;
 
     str = hex.c_str() + (offset / 4);
 
-    assert(BIGINT_BIT_LENGTH == 256);
+    assert(this->bit_length() == 256);
     sscanf(str, "%016lx%016lx%016lx%016lx",
            this->_data + 0,
            this->_data + 1,
            this->_data + 2,
            this->_data + 3);
-
-    this->_overflow = false;
 }
 
 BigInt::BigInt(const BigInt &other)
+    : _bit_length(other._bit_length),
+      _overflow(other._overflow)
 {
     assert(this->bit_length() == other.bit_length());
 
-    for (size_t i = 0; i < BIGINT_WORD_LENGTH; i++)
+    for (int i = 0; i < this->word_length(); i++)
         this->_data[i] = other._data[i];
-
-    this->_overflow = other._overflow;
 }
 
-BigInt::BigInt(int value)
+BigInt::BigInt(int value, int bit_length)
+    : _bit_length(bit_length),
+      _overflow(false)
 {
+    assert(bit_length == 256);
+
     this->_data[0] = 0;
     this->_data[1] = 0;
     this->_data[2] = 0;
     this->_data[3] = value;
-
-    this->_overflow = false;
 }
 
 std::string BigInt::hex(void) const
 {
     char buf[1024];
 
+    assert(this->bit_length() == 256);
     snprintf(buf, 1024, "%016lX%016lX%016lX%016lX",
              this->_data[0],
              this->_data[1],
@@ -109,13 +110,11 @@ const unsigned char *BigInt::byte_str(void) const
 
 BigInt operator+(const BigInt &a, const BigInt &b)
 {
-    BigInt out = 0;
-    __uint128_t sum;
-
     assert(sizeof(a._data[0]) == 8);
     assert(a.bit_length() == b.bit_length());
 
-    sum = 0;
+    __uint128_t sum = 0;
+    BigInt out(0, a.bit_length());
     for (int i = (a.bit_length()-1)/64; i >= 0; i--) {
         sum += a._data[i];
         sum += b._data[i];
@@ -130,7 +129,9 @@ BigInt operator+(const BigInt &a, const BigInt &b)
 
 BigInt operator-(const BigInt &a, const BigInt &b)
 {
-    BigInt out(a + (~b) + 1);
+    assert(a.bit_length() == b.bit_length());
+
+    BigInt out(a + (~b) + BigInt(1, a.bit_length()));
 
     if (a >= b)
         out._overflow = false;
@@ -142,13 +143,11 @@ BigInt operator-(const BigInt &a, const BigInt &b)
 
 BigInt operator*(const BigInt &a, const BigInt &b)
 {
-    BigInt out = 0;
-    __uint128_t sum;
-
     assert(sizeof(a._data[0]) == 8);
     assert(a.bit_length() == b.bit_length());
 
-    sum = 0;
+    BigInt out(0, a.bit_length());
+    __uint128_t  sum = 0;
     for (int p = (a.bit_length()-1)/64; p >= 0; p--) {
         int count, i ,j;
 
@@ -173,7 +172,7 @@ BigInt operator*(const BigInt &a, const BigInt &b)
 
 BigInt BigInt::operator~(void) const
 {
-    BigInt out = 0;
+    BigInt out(0, this->bit_length());
 
     assert (this->bit_length() == out.bit_length());
     for (int i = 0; i < this->bit_length()/64; i++)
@@ -186,7 +185,7 @@ bool operator==(const BigInt &a, const BigInt &b)
 {
     assert(a.bit_length() == b.bit_length());
 
-    for (size_t i = 0; i < BIGINT_WORD_LENGTH; i++)
+    for (int i = 0; i < a.word_length(); i++)
         if (a._data[i] != b._data[i])
             return false;
 
@@ -207,7 +206,7 @@ bool operator>(const BigInt &a, const BigInt &b)
     if (!a._overflow && b._overflow)
         return false;
 
-    for (size_t i = 0; i < BIGINT_WORD_LENGTH; i++) {
+    for (int i = 0; i < a.word_length(); i++) {
         if (a._data[i] > b._data[i])
             return true;
         if (a._data[i] < b._data[i])
@@ -226,7 +225,7 @@ bool operator>=(const BigInt &a, const BigInt &b)
     if (!a._overflow && b._overflow)
         return false;
 
-    for (size_t i = 0; i < BIGINT_WORD_LENGTH; i++) {
+    for (int i = 0; i < a.word_length(); i++) {
         if (a._data[i] > b._data[i])
             return true;
         if (a._data[i] < b._data[i])
@@ -294,7 +293,7 @@ int main(int argc, char **argv)
             std::cerr << "prod2 " << b.hex() << "\n";
             stack.push(a * b);
         } else {
-            stack.push(BigInt(argv[i], BIGINT_BIT_LENGTH));
+            stack.push(BigInt(argv[i], BIGINT_TEST_BIT_LENGTH));
             std::cerr << "read " << stack.top().hex() << "\n";
         }
     }

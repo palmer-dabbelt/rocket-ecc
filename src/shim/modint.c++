@@ -101,7 +101,7 @@ int main(int argc, char **argv)
 {
     int i;
     std::stack<ModInt> stack;
-    BigInt mod(argv[1], BIGINT_BIT_LENGTH);
+    BigInt mod(argv[1], MODINT_TEST_BIT_LENGTH);
 
     for (i = 2; i < argc; i++) {
         std::cerr << "argv[" << i << "] = " << argv[i] << "\n";
@@ -125,7 +125,7 @@ int main(int argc, char **argv)
             std::cerr << "prod2 " << b.hex() << "\n";
             stack.push(a * b);
         } else {
-            stack.push(ModInt(argv[i], BIGINT_BIT_LENGTH, mod));
+            stack.push(ModInt(argv[i], MODINT_TEST_BIT_LENGTH, mod));
             std::cerr << "read " << stack.top().hex() << "\n";
         }
     }

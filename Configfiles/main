@@ -25,12 +25,14 @@ LANGUAGES   += bash
 # Some arithmetic tests for the BigInt
 BINARIES    += bigint
 COMPILEOPTS += -DBIGINT_TEST_HARNESS
+COMPILEOPTS += -DBIGINT_TEST_BIT_LENGTH=256
 SOURCES     += shim/bigint.c++
 CONFIG      += testbigint
 
 # Some arithmetic tests for the ModInt
 BINARIES    += modint
 COMPILEOPTS += -DMODINT_TEST_HARNESS
+COMPILEOPTS += -DMODINT_TEST_BIT_LENGTH=256
 SOURCES     += shim/modint.c++
 CONFIG      += testmodint
 

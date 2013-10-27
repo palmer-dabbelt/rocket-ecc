@@ -5,18 +5,20 @@
 #include <stdint.h>
 
 /* FIXME: This enforces a constant bit length. */
-#ifndef BIGINT_BIT_LENGTH
-#define BIGINT_BIT_LENGTH 256
+#ifndef BIGINT_MAX_BIT_LENGTH
+#define BIGINT_MAX_BIT_LENGTH 512
 #endif
 
 /* This will only work for multiple of 64 bit lengths, but who cares! */
 typedef uint64_t bigint_datum_t;
-#define BIGINT_WORD_LENGTH (BIGINT_BIT_LENGTH / (sizeof(bigint_datum_t) * 8))
+#define BIGINT_MAX_WORD_LENGTH \
+    (BIGINT_MAX_BIT_LENGTH / (sizeof(bigint_datum_t) * 8))
 
 class BigInt
 {
 protected:
-    bigint_datum_t _data[BIGINT_WORD_LENGTH];
+    bigint_datum_t _data[BIGINT_MAX_WORD_LENGTH];
+    int _bit_length;
     bool _overflow;
 
 public:
@@ -34,15 +36,16 @@ public:
     /* Generates a new BigInt from a regular integer, which can only
      * populate the least significant bit but otherwise is
      * acceptable. */
-    BigInt(int value);
+    BigInt(int value, int bit_length);
 
     /* Returns this integer as a hex string. */
     std::string hex(void) const;
     const char *hex_cstr(void) const;
 
     /* Returns the length of this interger. */
-    int bit_length(void) const { return BIGINT_BIT_LENGTH; }
-    int byte_length(void) const { return BIGINT_BIT_LENGTH / 8; }
+    int bit_length(void) const { return this->_bit_length; }
+    int byte_length(void) const { return this->bit_length() / 8; }
+    int word_length(void) const { return this->byte_length() / 8; }
 
     /* Returns this integer as a byte string, not NUL terminated. */
     const unsigned char *byte_str(void) const;
