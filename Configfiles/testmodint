@@ -2,3 +2,8 @@ TESTSRC += smalladd.bash
 TESTSRC += smalladdmod.bash
 TESTSRC += randomadd.bash
 TESTSRC += randomaddof.bash
+
+TESTSRC += smallsub.bash
+TESTSRC += smallsubmod.bash
+TESTSRC += randomsub.bash
+TESTSRC += randomsubof.bash

@@ -30,7 +30,7 @@ ModInt operator+(const ModInt &a, const ModInt &b)
     ModInt out(a._data + b._data, a._mod);
 
     if (out._data > out._mod)
-        return ModInt(a._data + b._data - a._mod, a._mod);
+        return ModInt(out._data - a._mod, a._mod);
 
     return out;
 }
@@ -40,12 +40,7 @@ ModInt operator-(const ModInt &a, const ModInt &b)
     if (a._mod != b._mod)
         throw "Mis-matched modulus";
 
-    ModInt out(a._data - b._data, a._mod);
-
-    if (out._data > out._mod)
-        return ModInt(a._data - b._data + a._mod, a._mod);
-
-    return out;
+    return ModInt(a._mod - b._data, a._mod) + a;
 }
 
 ModInt operator*(const ModInt &a, const ModInt &b)
@@ -74,13 +69,13 @@ int main(int argc, char **argv)
             std::cerr << "sum1 " << a.hex() << "\n";
             std::cerr << "sum2 " << b.hex() << "\n";
             stack.push(a + b);
-#if 0
         } else if (strcmp(argv[i], "-") == 0) {
             ModInt a = stack.top(); stack.pop();
             ModInt b = stack.top(); stack.pop();
             std::cerr << "diff1 " << a.hex() << "\n";
             std::cerr << "diff2 " << b.hex() << "\n";
             stack.push(a - b);
+#if 0
         } else if (strcmp(argv[i], "x") == 0) {
             ModInt a = stack.top(); stack.pop();
             ModInt b = stack.top(); stack.pop();
