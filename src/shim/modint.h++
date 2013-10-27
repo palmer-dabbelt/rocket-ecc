@@ -38,7 +38,6 @@ public:
     friend ModInt operator+(const ModInt &a, const ModInt &b);
     friend ModInt operator-(const ModInt &a, const ModInt &b);
     friend ModInt operator*(const ModInt &a, const ModInt &b);
-
 };
 
 #endif
