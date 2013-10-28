@@ -38,6 +38,26 @@ public:
     friend ModInt operator+(const ModInt &a, const ModInt &b);
     friend ModInt operator-(const ModInt &a, const ModInt &b);
     friend ModInt operator*(const ModInt &a, const ModInt &b);
+    friend ModInt operator/(const ModInt &a, const ModInt &b);
+
+    /* Comparison operators. */
+    friend bool operator==(const ModInt &a, const ModInt &b)
+        { return (a._data == b._data) && (a._mod == b._mod); }
+    friend bool operator==(const ModInt &a, int b)
+        { return a._data == b; }
+    friend bool operator==(int a, const ModInt &b)
+        { return a == b._data; }
+
+    friend bool operator!=(const ModInt &a, const ModInt &b)
+        { return !(a == b); }
+    friend bool operator!=(const ModInt &a, int b)
+        { return !(a == b); }
+    friend bool operator!=(int a, const ModInt &b)
+        { return !(a == b); }
+
+    /* Returns the inverse of this value, returned as a BigInt because
+     * that's how it's used by the divide code. */
+    BigInt inverse(void) const;
 };
 
 #endif

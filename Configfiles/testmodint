@@ -19,3 +19,11 @@ TESTSRC += smallprod2.bash
 TESTSRC += smallprod3.bash
 TESTSRC += smallprod4.bash
 TESTSRC += smallprod5.bash
+
+TESTSRC += smallinv1.bash
+TESTSRC += smallinv2.bash
+TESTSRC += smallinv3.bash
+TESTSRC += smallinv4.bash
+TESTSRC += smallinv5.bash
+
+#TESTSRC += randominv1.bash

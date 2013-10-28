@@ -56,6 +56,57 @@ ModInt operator*(const ModInt &a, const ModInt &b)
     return ModInt(trunc2x((ade * bde) % me), a._mod);
 }
 
+ModInt operator/(const ModInt &a, const ModInt &b)
+{
+    assert(a._mod == b._mod);
+    assert(a.bit_length() == b.bit_length());
+    return ModInt(a._data * b.inverse(), a._mod);
+}
+
+BigInt ModInt::inverse(void) const
+{
+    BigInt p = this->_mod;
+    int bit_length = this->bit_length();
+
+    /* Here we compute the modular inverse of b, according to the NIST
+     * mechanism. */
+    BigInt u = this->_data;
+    BigInt v = p;
+
+    BigInt x1 = BigInt(1, bit_length);
+    BigInt x2 = BigInt(0, bit_length);
+
+    while ((u != 1) && (v != 1)) {
+        while (u.is_even()) {
+            u = u >> 1;
+
+            if (x1.is_even())
+                x1 = x1 >> 1;
+            else
+                x1 = add_shift_one(x1, p);
+        }
+
+        while (v.is_even()) {
+            v = v >> 1;
+
+            if (x2.is_even())
+                x2 = x2 >> 1;
+            else
+                x2 = add_shift_one(x2, p);
+        }
+
+        if (u >= v) {
+            u = (u - v) % p;
+            x1 = (x1 - x2) % p;
+        } else {
+            v = (v - u) % p;
+            x2 = (x2 - x1) % p;
+        }
+    }
+
+    return (u == 1) ? x1 : x2;
+}
+
 #ifdef MODINT_TEST_HARNESS
 int main(int argc, char **argv)
 {
@@ -84,6 +135,24 @@ int main(int argc, char **argv)
             std::cerr << "prod1 " << a.hex() << "\n";
             std::cerr << "prod2 " << b.hex() << "\n";
             stack.push(a * b);
+        } else if (strcmp(argv[i], "/") == 0) {
+            ModInt a = stack.top(); stack.pop();
+            ModInt b = stack.top(); stack.pop();
+            std::cerr << "div1 " << a.hex() << "\n";
+            std::cerr << "div2 " << b.hex() << "\n";
+            stack.push(a / b);
+        } else if (strcmp(argv[i], "inv") == 0) {
+            ModInt a = stack.top(); stack.pop();
+            std::cerr << "inv1 " << a.hex() << "\n";
+
+            ModInt inv(a.inverse(), mod);
+            std::cerr << "inv " << inv.hex() << "\n";
+
+            std::cerr << "invprod " << (inv * a).hex() << "\n";
+            if ((inv * a) != 1)
+                std::cerr << "Modular Inversion Failed\n";
+
+            stack.push(inv);
         } else {
             stack.push(ModInt(argv[i], MODINT_TEST_BIT_LENGTH, mod));
             std::cerr << "read " << stack.top().hex() << "\n";
