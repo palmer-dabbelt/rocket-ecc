@@ -11,3 +11,6 @@ TESTSRC += largeprod.bash
 TESTSRC += largeproda.bash
 TESTSRC += largeprodb.bash
 TESTSRC += randomprod.bash
+
+TESTSRC += randommod1.bash
+TESTSRC += randommod2.bash

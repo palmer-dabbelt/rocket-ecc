@@ -388,6 +388,12 @@ int main(int argc, char **argv)
             std::cerr << "prod1 " << a.hex() << "\n";
             std::cerr << "prod2 " << b.hex() << "\n";
             stack.push(a * b);
+        } else if (strcmp(argv[i], "%") == 0) {
+            BigInt a = stack.top(); stack.pop();
+            BigInt b = stack.top(); stack.pop();
+            std::cerr << "mod1 " << a.hex() << "\n";
+            std::cerr << "mod2 " << b.hex() << "\n";
+            stack.push(a % b);
         } else {
             stack.push(BigInt(argv[i], BIGINT_TEST_BIT_LENGTH));
             std::cerr << "read " << stack.top().hex() << "\n";
