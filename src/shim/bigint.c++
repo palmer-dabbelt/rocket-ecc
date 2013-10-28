@@ -229,8 +229,6 @@ BigInt operator*(const BigInt &a, const BigInt &b)
 
     out._overflow = (sum > 0) || a._overflow || b._overflow;
 
-    fprintf(stderr, "operator*::out: '%s'\n", out.hex_cstr());
-
     return out;
 }
 
