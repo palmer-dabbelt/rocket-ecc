@@ -58,6 +58,14 @@ BigInt::BigInt(int value, int bit_length)
     for (int i = 0; i < this->word_length(); i++)
         this->_data[i] = 0;
 
+    /* FIXME: GCC with optimizations complains when this isn't here.
+     * I have no idea why.  The Internet suggests the warning
+     * (-Werror=array-bounds) has lots of false positives, so I think
+     * it's probably best to just work around. */
+    assert(this->word_length() > 0);
+    if (this->word_length() <= 0)
+        abort();
+
     this->_data[this->word_length() - 1] = value;
 }
 
