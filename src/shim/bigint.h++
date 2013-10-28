@@ -65,6 +65,10 @@ public:
     BigInt trunc2x(void) const { return trunc(bit_length() / 2); }
     friend BigInt trunc2x(const BigInt &i) { return i.trunc2x(); }
 
+    /* This lets us easily check if the numbere is odd or even. */
+    bool is_even(void) const { return (_data[word_length()-1] % 2) == 0; }
+    bool is_odd(void) const { return !this->is_even(); }
+
     /* Here's a number of arithmatic operations that can be done on a
      * BigInt, all of which do their associated operation. */
     friend BigInt operator+(const BigInt &a, const BigInt &b);
@@ -76,6 +80,7 @@ public:
      * (including but not limited to some of the operations above). */
     BigInt operator~(void) const;
     BigInt operator<<(int i) const;
+    BigInt operator>>(int i) const;
 
     /* Some comparison operators. */
     friend bool operator==(const BigInt &a, const BigInt &b);

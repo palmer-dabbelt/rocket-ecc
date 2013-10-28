@@ -261,6 +261,27 @@ BigInt BigInt::operator<<(int i) const
     return out;
 }
 
+BigInt BigInt::operator>>(int i) const
+{
+    BigInt out(*this);
+
+    for (int j = 1; j < this->word_length(); j++) {
+        bigint_double_datum_t d;
+
+        d = this->_data[j-1];
+        d <<= (sizeof(d) * 4);
+        d += this->_data[j];
+
+        d >>= i;
+
+        out._data[j] = d;
+    }
+
+    out._data[0] = this->_data[0] >> i;
+
+    return out;
+}
+
 bool operator==(const BigInt &a, const BigInt &b)
 {
     assert(a.bit_length() == b.bit_length());
