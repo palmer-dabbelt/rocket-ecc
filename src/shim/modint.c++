@@ -124,6 +124,7 @@ BigInt ModInt::inverse(void) const
         }
     }
 
+    assert(((x1 % p) * (this->_data)) == 1);
     return trunc2x(x1 % p);
 }
 

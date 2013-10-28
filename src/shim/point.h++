@@ -10,14 +10,18 @@ class Point
 {
 protected:
     const Curve *_c;
-    ModInt _x;
-    ModInt _y;
+    const ModInt _x;
+    const ModInt _y;
 
 public:
-    /* This constructs a new EC point from a single long string.  Here
-     * "bit_length" is actually the length of a single int in the
-     * point. */
+    /* This constructs a new EC point from a single long string.  The
+     * length of the string must be exactly twice the length of the
+     * curve. */
     Point(std::string hex, const Curve *c);
+
+    /* Creates a point from two ModInts, each of which must be exactly
+     * the length required by the curve. */
+    Point(const ModInt &x, const ModInt &y, const Curve *c);
 
     /* Simply returns the components of this point. */
     ModInt x(void) const { return _x; }
@@ -37,7 +41,7 @@ public:
 
     /* These arithmatic operators compute the geometric definition of
      * elliptic curve field operations. */
-    friend Point operator+(const Point &a, const Point &b);
+    friend Point operator+(const Point &P, const Point &Q);
 };
 
 #endif

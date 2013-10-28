@@ -7,8 +7,9 @@
 #endif
 
 /* The known curves are allocated staticly. */
-static Curve *p256k1 = NULL;
 static Curve *get_p256k1(void);
+static Curve *get_certicom23(void);
+static Curve *get_certicom17(void);
 
 const Curve *Curve::lookup_curve(std::string name)
 {
@@ -16,6 +17,10 @@ const Curve *Curve::lookup_curve(std::string name)
      * key size. */
     if (name.compare("p256k1") == 0) {
         return get_p256k1();
+    } else if (name.compare("certicom23") == 0) {
+        return get_certicom23();
+    } else if (name.compare("certicom17") == 0) {
+        return get_certicom17();
     } else {
         throw InvalidArgument("Unable to parse curve parameter");
     }
@@ -45,6 +50,9 @@ int Curve::openssl_name(void) const
     switch (this->_type) {
     case TYPE_P_256_K_1:
         return NID_secp256k1;
+    case TYPE_CERTICOM23:
+    case TYPE_CERTICOM17:
+        return -1;
     }
 
     /* This should never get here, but I guess the C++ compiler
@@ -55,6 +63,8 @@ int Curve::openssl_name(void) const
 
 Curve *get_p256k1(void)
 {
+    static Curve *p256k1 = NULL;
+
     if (p256k1 == NULL) {
         p256k1 = new Curve(
             "ffffffff00000001000000000000000000000000ffffffffffffffffffffffff",
@@ -67,4 +77,40 @@ Curve *get_p256k1(void)
     }
 
     return p256k1;
+}
+
+Curve *get_certicom23(void)
+{
+    static Curve *certicom23 = NULL;
+
+    if (certicom23 == NULL) {
+        certicom23 = new Curve(
+            "0000000000000000000000000000000000000000000000000000000000000017",
+            "0000000000000000000000000000000000000000000000000000000000000000",
+            "0000000000000000000000000000000000000000000000000000000000000001",
+            "0000000000000000000000000000000000000000000000000000000000000000",
+            "0000000000000000000000000000000000000000000000000000000000000000",
+            "0000000000000000000000000000000000000000000000000000000000000017",
+            256, Curve::TYPE_CERTICOM23);
+    }
+
+    return certicom23;
+}
+
+Curve *get_certicom17(void)
+{
+    static Curve *certicom17 = NULL;
+
+    if (certicom17 == NULL) {
+        certicom17 = new Curve(
+            "0000000000000000000000000000000000000000000000000000000000000011",
+            "0000000000000000000000000000000000000000000000000000000000000000",
+            "0000000000000000000000000000000000000000000000000000000000000001",
+            "0000000000000000000000000000000000000000000000000000000000000000",
+            "0000000000000000000000000000000000000000000000000000000000000000",
+            "0000000000000000000000000000000000000000000000000000000000000011",
+            256, Curve::TYPE_CERTICOM23);
+    }
+
+    return certicom17;
 }

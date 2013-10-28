@@ -36,6 +36,12 @@ COMPILEOPTS += -DMODINT_TEST_BIT_LENGTH=256
 SOURCES     += shim/modint.c++
 CONFIG      += testmodint
 
+# NIST published point test cases
+BINARIES    += point
+COMPILEOPTS += -DPOINT_TEST_HARNESS
+SOURCES     += shim/point.c++
+CONFIG      += testpoint
+
 # The remaining tests use OpenSSL to verify that all the crypto code I
 # wrote is actually somewhat sane.
 LANGUAGES   += c++

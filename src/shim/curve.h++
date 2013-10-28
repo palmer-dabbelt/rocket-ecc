@@ -3,6 +3,7 @@
 
 #include "bigint.h++"
 #include "invalid_argument.h++"
+#include "modint.h++"
 
 #include <string>
 
@@ -11,7 +12,12 @@ class Curve
 public:
     enum Type
     {
-        TYPE_P_256_K_1
+        /* NIST-defined curves. */
+        TYPE_P_256_K_1,
+
+        /* Debugging curves. */
+        TYPE_CERTICOM23,
+        TYPE_CERTICOM17
     };
 
 private:
@@ -52,11 +58,11 @@ public:
     int bit_length(void) const { return _bit_length; }
 
     /* The parameters of this curve, as defined by NIST. */
-    BigInt p(void) const { return _p; }
-    BigInt a(void) const { return _a; }
-    BigInt b(void) const { return _b; }
-    BigInt x_G(void) const { return _x_G; }
-    BigInt y_G(void) const { return _y_G; }
+    ModInt p(void) const { return ModInt(_p, _q); }
+    ModInt a(void) const { return ModInt(_a, _q); }
+    ModInt b(void) const { return ModInt(_b, _q); }
+    ModInt x_G(void) const { return ModInt(_x_G, _q); }
+    ModInt y_G(void) const { return ModInt(_y_G, _q); }
     BigInt q(void) const { return _q; }
 
 };
