@@ -25,5 +25,9 @@ TESTSRC += smallinv2.bash
 TESTSRC += smallinv3.bash
 TESTSRC += smallinv4.bash
 TESTSRC += smallinv5.bash
+TESTSRC += smallinv6.bash
 
-#TESTSRC += randominv1.bash
+TESTSRC += randominv1.bash
+TESTSRC += randominv2.bash
+TESTSRC += randominv3.bash
+TESTSRC += randominv4.bash

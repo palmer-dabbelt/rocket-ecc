@@ -63,20 +63,40 @@ ModInt operator/(const ModInt &a, const ModInt &b)
     return ModInt(a._data * b.inverse(), a._mod);
 }
 
+/* FIXME: This is horribly, terribly afwul.  I think that I have to
+ * double the length of everything to avoid overflow, and there's that
+ * afwul multiplication check in there as well. */
 BigInt ModInt::inverse(void) const
 {
-    BigInt p = this->_mod;
+    BigInt p = this->_mod.extend2x();
     int bit_length = this->bit_length();
 
     /* Here we compute the modular inverse of b, according to the NIST
      * mechanism. */
-    BigInt u = this->_data;
+    BigInt u = this->_data.extend2x();
     BigInt v = p;
 
-    BigInt x1 = BigInt(1, bit_length);
-    BigInt x2 = BigInt(0, bit_length);
+    BigInt x1 = BigInt(1, 2*bit_length);
+    BigInt x2 = BigInt(0, 2*bit_length);
 
-    while ((u != 1) && (v != 1)) {
+    while (u != 0) {
+        /* I have no idea why these need to exist.  It seems like I
+         * have one termination condition from the NIST algorithm (for
+         * non-prime P), and another termination condition from a
+         * different paper (for prime P).  Neither of them works in
+         * both cases, so I just go and check... */
+        {
+            ModInt x1m(x1.trunc2x(), this->_mod);
+            if ((u == 1) && (x1m * (*this) == 1))
+                return x1.trunc2x();
+        }
+
+        {
+            ModInt x2m(x2.trunc2x(), this->_mod);
+            if ((v == 1) && (x2m * (*this) == 1))
+                return x2.trunc2x();
+        }
+
         while (u.is_even()) {
             u = u >> 1;
 
@@ -96,15 +116,15 @@ BigInt ModInt::inverse(void) const
         }
 
         if (u >= v) {
-            u = (u - v) % p;
-            x1 = (x1 - x2) % p;
+            u = ((u + p) - v) % p;
+            x1 = ((x1 + p) - x2) % p;
         } else {
-            v = (v - u) % p;
-            x2 = (x2 - x1) % p;
+            v = ((v + p) - u) % p;
+            x2 = ((x2 + p) - x1) % p;
         }
     }
 
-    return (u == 1) ? x1 : x2;
+    return trunc2x(x1 % p);
 }
 
 #ifdef MODINT_TEST_HARNESS
@@ -152,6 +172,7 @@ int main(int argc, char **argv)
             if ((inv * a) != 1)
                 std::cerr << "Modular Inversion Failed\n";
 
+            assert((inv * a) == 1);
             stack.push(inv);
         } else {
             stack.push(ModInt(argv[i], MODINT_TEST_BIT_LENGTH, mod));
