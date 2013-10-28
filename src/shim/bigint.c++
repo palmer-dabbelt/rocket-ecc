@@ -362,6 +362,16 @@ bool operator>=(const BigInt &a, const BigInt &b)
     return true;
 }
 
+BigInt add_shift_one(const BigInt &a, const BigInt &b)
+{
+    BigInt out = (a >> 1) + (b >> 1);
+
+    if (a.is_odd() && b.is_odd())
+        return out + 1;
+
+    return out;
+}
+
 int hex2int(unsigned char c)
 {
     switch (c) {

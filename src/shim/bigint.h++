@@ -74,8 +74,15 @@ public:
     /* Here's a number of arithmatic operations that can be done on a
      * BigInt, all of which do their associated operation. */
     friend BigInt operator+(const BigInt &a, const BigInt &b);
+    friend BigInt operator+(const BigInt &a, int b)
+        { return a + BigInt(b, a.bit_length()); }
+    friend BigInt operator+(int &a, const BigInt &b)
+        { return BigInt(a, b.bit_length()) + b; }
+
     friend BigInt operator-(const BigInt &a, const BigInt &b);
+
     friend BigInt operator*(const BigInt &a, const BigInt &b);
+
     friend BigInt operator%(const BigInt &a, const BigInt &b);
 
     /* Some logical operators, which can be useful for many things
@@ -107,6 +114,9 @@ public:
 
     friend bool operator<=(const BigInt &a, const BigInt &b)
         { return !(a > b); }
+
+    /* Some special operators useful for various crypto algorithms. */
+    friend BigInt add_shift_one(const BigInt &a, const BigInt &b);
 };
 
 #endif
