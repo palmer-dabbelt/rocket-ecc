@@ -74,11 +74,32 @@ std::string BigInt::hex(void) const
     char buf[1024];
 
     assert(this->bit_length() == 256);
-    snprintf(buf, 1024, "%016lX%016lX%016lX%016lX",
-             this->_data[0],
-             this->_data[1],
-             this->_data[2],
-             this->_data[3]);
+    switch (this->bit_length()) {
+    case 256:
+        snprintf(buf, 1024, "%016lX%016lX%016lX%016lX",
+                 this->_data[0],
+                 this->_data[1],
+                 this->_data[2],
+                 this->_data[3]
+            );
+        break;
+
+    case 512:
+        snprintf(buf, 1024, "%016lX%016lX%016lX%016lX%016lX%016lX%016lX%016lX",
+                 this->_data[0],
+                 this->_data[1],
+                 this->_data[2],
+                 this->_data[3],
+                 this->_data[4],
+                 this->_data[5],
+                 this->_data[6],
+                 this->_data[7]
+            );
+        break;
+
+    default:
+        abort();
+    }
 
     return buf;
 }
@@ -177,16 +198,25 @@ BigInt operator*(const BigInt &a, const BigInt &b)
     assert(a.bit_length() == b.bit_length());
 
     BigInt out(0, a.bit_length());
-    bigint_double_datum_t  sum = 0;
+    bigint_double_datum_t sum = 0;
     for (int p = a.word_length()-1; p >= 0; p--) {
         int count, i ,j;
+        bigint_double_datum_t overflow;
 
         count = a.word_length() - p;
         i = a.word_length() - count;
         j = a.word_length() - 1;
+        overflow = 0;
         while (count > 0) {
-            sum += (bigint_double_datum_t)(a._data[i])
-                   * (bigint_double_datum_t)(b._data[j]);
+            bigint_double_datum_t ba = a._data[i];
+            bigint_double_datum_t bb = b._data[j];
+            bigint_double_datum_t prod = ba * bb;
+
+            if (BIGINT_DOUBLE_DATUM_MAX - prod < sum)
+                overflow++;
+
+            sum += (ba * bb);
+
             i++;
             j--;
             count--;
@@ -194,9 +224,12 @@ BigInt operator*(const BigInt &a, const BigInt &b)
 
         out._data[p] = sum;
         sum >>= sizeof(sum) * 4;
+        sum += (overflow << (sizeof(sum) * 4));
     }
 
     out._overflow = (sum > 0) || a._overflow || b._overflow;
+
+    fprintf(stderr, "operator*::out: '%s'\n", out.hex_cstr());
 
     return out;
 }

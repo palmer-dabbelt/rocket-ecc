@@ -16,6 +16,8 @@ typedef uint64_t bigint_datum_t;
 
 typedef __uint128_t bigint_double_datum_t;
 
+#define BIGINT_DOUBLE_DATUM_MAX ((__uint128_t)(-1))
+
 class BigInt
 {
 protected:
