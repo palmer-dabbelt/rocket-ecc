@@ -73,7 +73,6 @@ std::string BigInt::hex(void) const
 {
     char buf[1024];
 
-    assert(this->bit_length() == 256);
     switch (this->bit_length()) {
     case 256:
         snprintf(buf, 1024, "%016lX%016lX%016lX%016lX",
