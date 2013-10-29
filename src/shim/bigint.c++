@@ -1,7 +1,10 @@
+#define __STDC_FORMAT_MACROS
+
 #include "bigint.h++"
 #include <assert.h>
 #include <iostream>
 #include <stack>
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,7 +21,7 @@ BigInt::BigInt(std::string hex, int bit_length)
     str = hex.c_str();
 
     assert(this->bit_length() == 256);
-    sscanf(str, "%016lx%016lx%016lx%016lx",
+    sscanf(str, "%016" PRIX64 "%016" PRIX64 "%016" PRIX64 "%016" PRIX64,
            this->_data + 0,
            this->_data + 1,
            this->_data + 2,
@@ -34,7 +37,7 @@ BigInt::BigInt(std::string hex, int offset, int bit_length)
     str = hex.c_str() + (offset / 4);
 
     assert(this->bit_length() == 256);
-    sscanf(str, "%016lx%016lx%016lx%016lx",
+    sscanf(str, "%016" PRIX64 "%016" PRIX64 "%016" PRIX64 "%016" PRIX64,
            this->_data + 0,
            this->_data + 1,
            this->_data + 2,
@@ -75,7 +78,7 @@ std::string BigInt::hex(void) const
 
     switch (this->bit_length()) {
     case 256:
-        snprintf(buf, 1024, "%016lX%016lX%016lX%016lX",
+        snprintf(buf, 1024, "%016" PRIX64 "%016" PRIX64 "%016" PRIX64 "%016" PRIX64,
                  this->_data[0],
                  this->_data[1],
                  this->_data[2],
@@ -84,7 +87,7 @@ std::string BigInt::hex(void) const
         break;
 
     case 512:
-        snprintf(buf, 1024, "%016lX%016lX%016lX%016lX%016lX%016lX%016lX%016lX",
+        snprintf(buf, 1024, "%016" PRIX64 "%016" PRIX64 "%016" PRIX64 "%016" PRIX64 "%016" PRIX64 "%016" PRIX64 "%016" PRIX64 "%016" PRIX64,
                  this->_data[0],
                  this->_data[1],
                  this->_data[2],
