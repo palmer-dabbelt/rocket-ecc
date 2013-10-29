@@ -39,8 +39,8 @@ CONFIG      += testmodint
 # The remaining tests use OpenSSL to verify that all the crypto code I
 # wrote is actually somewhat sane.
 LANGUAGES   += c++
-COMPILEOPTS += `ppkg-config --have OPENSSL openssl --cflags`
-LINKOPTS    += `ppkg-config --have OPENSSL openssl --libs`
+COMPILEOPTS += `ppkg-config --have OPENSSL libssl libcrypto --cflags`
+LINKOPTS    += `ppkg-config --have OPENSSL libssl libcrypto --libs`
 LINKOPTS    += -ldl
 
 BINARIES    += openssl-genkey
