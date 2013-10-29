@@ -42,6 +42,7 @@ LANGUAGES   += c++
 COMPILEOPTS += `ppkg-config --have OPENSSL libssl libcrypto --cflags`
 LINKOPTS    += `ppkg-config --have OPENSSL libssl libcrypto --libs`
 LINKOPTS    += -ldl
+COMPILEOPTS += -Wno-deprecated-declarations
 
 BINARIES    += openssl-genkey
 SOURCES     += shim/openssl-genkey.c++

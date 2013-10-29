@@ -288,7 +288,7 @@ BigInt BigInt::operator<<(int i) const
 {
     BigInt out(*this);
 
-    for (i = i; i > 0; i--)
+    for (; i > 0; i--)
         out = out + out;
 
     return out;
