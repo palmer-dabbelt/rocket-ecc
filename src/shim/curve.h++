@@ -57,12 +57,15 @@ public:
      * (not the security parameter). */
     int bit_length(void) const { return _bit_length; }
 
+    /* Generates an integer in this field. */
+    ModInt field(const BigInt &x) const { return ModInt(x, this->_p); }
+
     /* The parameters of this curve, as defined by NIST. */
-    ModInt p(void) const { return ModInt(_p, _q); }
-    ModInt a(void) const { return ModInt(_a, _q); }
-    ModInt b(void) const { return ModInt(_b, _q); }
-    ModInt x_G(void) const { return ModInt(_x_G, _q); }
-    ModInt y_G(void) const { return ModInt(_y_G, _q); }
+    BigInt p(void) const { return _p; }
+    ModInt a(void) const { return this->field(_a); }
+    ModInt b(void) const { return this->field(_b); }
+    BigInt x_G(void) const { return _x_G; }
+    BigInt y_G(void) const { return _y_G; }
     BigInt q(void) const { return _q; }
 
 };

@@ -85,7 +85,7 @@ int main(int argc, char **argv)
             ps.push(x + y);
         } else {
             BigInt bi(argv[i], c->bit_length());
-            is.push(ModInt(bi, c->q()));
+            is.push(c->field(bi));
             std::cerr << "read " << is.top().hex() << "\n";
         }
 
