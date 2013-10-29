@@ -19,7 +19,7 @@ ModInt::ModInt(std::string hex, int offset, int bit_length, BigInt mod)
 }
 
 ModInt::ModInt(BigInt data, BigInt mod)
-    : _data(data),
+    : _data(data % mod),
       _mod(mod)
 {
 }
