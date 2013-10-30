@@ -31,9 +31,11 @@ ModInt operator+(const ModInt &a, const ModInt &b)
 
     ModInt out(a._data + b._data, a._mod);
 
-    if (out._data > out._mod)
-        return ModInt(out._data - a._mod, a._mod);
 
+    if (out._data > out._mod)
+        out = ModInt(out._data - a._mod, a._mod);
+
+    assert(!out._data.overflow());
     return out;
 }
 

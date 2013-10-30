@@ -51,6 +51,7 @@ Point operator+(const Point &P, const Point &Q)
 
     fprintf(stderr, "Py - Qy: %s\n", (Py - Qy).hex_cstr());
     fprintf(stderr, "Px - Qx: %s\n", (Px - Qx).hex_cstr());
+    fprintf(stderr, "(Px - Qx)^(-1): %s\n", (Px - Qx).inverse().hex_cstr());
 
     ModInt h = (Py - Qy) / (Px - Qx);
     ModInt h2 = h * h;

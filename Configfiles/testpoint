@@ -2,5 +2,8 @@ TESTSRC += nistp256k1-point.bash
 #TESTSRC += nistp256k1-pointadd.bash
 
 TESTSRC += certicom23-pointadd1.bash
+TESTSRC += certicom23-pointadd2.bash
+TESTSRC += certicom23-pointadd3.bash
+TESTSRC += certicom23-pointadd4.bash
 
 TESTSRC += certicom17-pointadd1.bash
