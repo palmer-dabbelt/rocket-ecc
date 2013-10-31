@@ -31,3 +31,5 @@ TESTSRC += randominv1.bash
 TESTSRC += randominv2.bash
 TESTSRC += randominv3.bash
 TESTSRC += randominv4.bash
+
+TESTSRC += nistprod1.bash
