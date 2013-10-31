@@ -10,18 +10,21 @@ ModInt::ModInt(std::string hex, int bit_length, BigInt mod)
     : _data(BigInt(hex, bit_length) % mod),
       _mod(mod)
 {
+    assert(!_data.overflow());
 }
 
 ModInt::ModInt(std::string hex, int offset, int bit_length, BigInt mod)
     : _data(BigInt(hex, offset, bit_length) % mod),
       _mod(mod)
 {
+    assert(!_data.overflow());
 }
 
 ModInt::ModInt(BigInt data, BigInt mod)
     : _data(data % mod),
       _mod(mod)
 {
+    assert(!_data.overflow());
 }
 
 ModInt operator+(const ModInt &a, const ModInt &b)
@@ -30,7 +33,7 @@ ModInt operator+(const ModInt &a, const ModInt &b)
         throw "Mis-matched modulus";
 
     ModInt out(a._data + b._data, a._mod);
-
+    assert(!out._data.overflow());
 
     if (out._data > out._mod)
         out = ModInt(out._data - a._mod, a._mod);
@@ -44,31 +47,47 @@ ModInt operator-(const ModInt &a, const ModInt &b)
     if (a._mod != b._mod)
         throw "Mis-matched modulus";
 
-    return ModInt(a._mod - b._data, a._mod) + a;
+    ModInt out = (ModInt(a._mod - b._data, a._mod) + a);
+    assert(!out._data.overflow());
+
+    return out;
 }
 
 ModInt operator*(const ModInt &a, const ModInt &b)
 {
     assert(a._mod == b._mod);
 
+    assert(!a._data.overflow());
+    assert(!b._data.overflow());
+
     BigInt ade = a._data.extend2x();
     BigInt bde = b._data.extend2x();
     BigInt me  = a._mod.extend2x();
 
-    return ModInt(trunc2x((ade * bde) % me), a._mod);
+    ModInt out(trunc2x((ade * bde) % me), a._mod);
+    assert(!out._data.overflow());
+
+    return out;
 }
 
 ModInt operator/(const ModInt &a, const ModInt &b)
 {
     assert(a._mod == b._mod);
     assert(a.bit_length() == b.bit_length());
-    return ModInt(a._data * b.inverse(), a._mod);
+
+    assert(!a._data.overflow());
+    assert(!b._data.overflow());
+
+    ModInt out = a * b.inverse();
+    assert(!out._data.overflow());
+
+    return out;
 }
 
 /* FIXME: This is horribly, terribly afwul.  I think that I have to
  * double the length of everything to avoid overflow, and there's that
  * afwul multiplication check in there as well. */
-BigInt ModInt::inverse(void) const
+ModInt ModInt::inverse(void) const
 {
     BigInt p = this->_mod.extend2x();
     int bit_length = this->bit_length();
@@ -90,13 +109,13 @@ BigInt ModInt::inverse(void) const
         {
             ModInt x1m(x1.trunc2x(), this->_mod);
             if ((u == 1) && (x1m * (*this) == 1))
-                return x1.trunc2x();
+                return x1m;
         }
 
         {
             ModInt x2m(x2.trunc2x(), this->_mod);
             if ((v == 1) && (x2m * (*this) == 1))
-                return x2.trunc2x();
+                return x2m;
         }
 
         while (u.is_even()) {
@@ -127,7 +146,7 @@ BigInt ModInt::inverse(void) const
     }
 
     assert(((x1 % p) * (this->_data)) == 1);
-    return trunc2x(x1 % p);
+    return ModInt(trunc2x(x1), p);
 }
 
 #ifdef MODINT_TEST_HARNESS
@@ -168,7 +187,7 @@ int main(int argc, char **argv)
             ModInt a = stack.top(); stack.pop();
             std::cerr << "inv1 " << a.hex() << "\n";
 
-            ModInt inv(a.inverse(), mod);
+            ModInt inv = a.inverse();
             std::cerr << "inv " << inv.hex() << "\n";
 
             std::cerr << "invprod " << (inv * a).hex() << "\n";

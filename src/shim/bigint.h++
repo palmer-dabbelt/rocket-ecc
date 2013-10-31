@@ -59,6 +59,9 @@ public:
     bool overflow(void) const { return _overflow; }
     std::string of_str(void) const { return _overflow ? "true" : "false"; }
 
+    /* Returns a new BigInt without the overflow bit set. */
+    BigInt cof(void) const;
+
     /* Allows for the manipulation of BigInt bit widths. */
     BigInt extend(int new_bit_length) const;
     BigInt extend2x(void) const { return extend(bit_length() * 2); }

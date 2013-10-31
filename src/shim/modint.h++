@@ -57,7 +57,7 @@ public:
 
     /* Returns the inverse of this value, returned as a BigInt because
      * that's how it's used by the divide code. */
-    BigInt inverse(void) const;
+    ModInt inverse(void) const;
 };
 
 #endif

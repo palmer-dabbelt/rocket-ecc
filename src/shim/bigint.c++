@@ -137,6 +137,13 @@ const unsigned char *BigInt::byte_str(void) const
     return bytes_out;
 }
 
+BigInt BigInt::cof(void) const
+{
+    BigInt o(*this);
+    o._overflow = false;
+    return o;
+}
+
 BigInt BigInt::extend(int new_bit_length) const
 {
     BigInt out(0, new_bit_length);

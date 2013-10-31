@@ -44,22 +44,10 @@ Point operator+(const Point &P, const Point &Q)
     ModInt Qx = Q.x();
     ModInt Qy = Q.y();
 
-    fprintf(stderr, "Px: %s\n", Px.hex_cstr());
-    fprintf(stderr, "Py: %s\n", Py.hex_cstr());
-    fprintf(stderr, "Qx: %s\n", Qx.hex_cstr());
-    fprintf(stderr, "Qy: %s\n", Qy.hex_cstr());
-
-    fprintf(stderr, "Py - Qy: %s\n", (Py - Qy).hex_cstr());
-    fprintf(stderr, "Px - Qx: %s\n", (Px - Qx).hex_cstr());
-    fprintf(stderr, "(Px - Qx)^(-1): %s\n", (Px - Qx).inverse().hex_cstr());
-
     ModInt h = (Py - Qy) / (Px - Qx);
     ModInt h2 = h * h;
 
-    fprintf(stderr, "h: %s\n",  h.hex_cstr());
-    fprintf(stderr, "h2: %s\n", h2.hex_cstr());
-
-    ModInt Rx = h2 - c->a() - Px - Qx;
+    ModInt Rx = h2 - Px - Qx;
     ModInt Ry = (h * (Px - Rx) - Py);
 
     return Point(Rx, Ry, c);

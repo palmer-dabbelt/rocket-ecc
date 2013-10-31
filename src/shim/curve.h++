@@ -67,7 +67,6 @@ public:
     BigInt x_G(void) const { return _x_G; }
     BigInt y_G(void) const { return _y_G; }
     BigInt q(void) const { return _q; }
-
 };
 
 #endif
