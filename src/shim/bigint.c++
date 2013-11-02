@@ -78,7 +78,7 @@ std::string BigInt::hex(void) const
 
     switch (this->bit_length()) {
     case 256:
-        snprintf(buf, 1024, "%016" PRIX64 "%016" PRIX64 "%016" PRIX64 "%016" PRIX64,
+        sprintf(buf, "%016" PRIX64 "%016" PRIX64 "%016" PRIX64 "%016" PRIX64,
                  this->_data[0],
                  this->_data[1],
                  this->_data[2],
@@ -87,7 +87,7 @@ std::string BigInt::hex(void) const
         break;
 
     case 512:
-        snprintf(buf, 1024, "%016" PRIX64 "%016" PRIX64 "%016" PRIX64 "%016" PRIX64 "%016" PRIX64 "%016" PRIX64 "%016" PRIX64 "%016" PRIX64,
+        sprintf(buf, "%016" PRIX64 "%016" PRIX64 "%016" PRIX64 "%016" PRIX64 "%016" PRIX64 "%016" PRIX64 "%016" PRIX64 "%016" PRIX64,
                  this->_data[0],
                  this->_data[1],
                  this->_data[2],
@@ -108,7 +108,12 @@ std::string BigInt::hex(void) const
 
 const char *BigInt::hex_cstr(void) const
 {
-    return strdup(this->hex().c_str());
+    char *out;
+
+    out = (char *)malloc(strlen(this->hex().c_str()) + 1);
+    strcpy(out, this->hex().c_str());
+
+    return out;
 }
 
 const unsigned char *BigInt::byte_str(void) const
@@ -449,6 +454,9 @@ int main(int argc, char **argv)
             std::cerr << "read " << stack.top().hex() << "\n";
         }
     }
+
+    for (i = 0; i < TEST_NEWLINE_COUNT; i++)
+        std::cout << "\n";
 
     std::cout << stack.top().hex() << " " << stack.top().of_str() << "\n";
 }

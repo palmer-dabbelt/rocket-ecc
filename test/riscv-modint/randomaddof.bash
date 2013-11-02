@@ -1,0 +1,1 @@
+../modint/randomaddof.bash

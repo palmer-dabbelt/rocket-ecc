@@ -202,6 +202,9 @@ int main(int argc, char **argv)
         }
     }
 
+    for (i = 0; i < TEST_NEWLINE_COUNT; i++)
+        std::cout << "\n";
+
     std::cout << stack.top().hex() << "\n";
 }
 #endif

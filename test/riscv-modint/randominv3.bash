@@ -1,0 +1,1 @@
+../modint/randominv3.bash

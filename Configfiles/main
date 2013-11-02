@@ -10,17 +10,45 @@ COMPILEOPTS += -pedantic
 # The test harnesses are written (at least partially) in bash
 LANGUAGES   += bash
 
+# It seems that either Spike or the proxy kernel spits out some junk
+# when I try and run tests.  This attempts to seperate the actual
+# tests from that output by writing a number of newlines.
+LANGUAGES   += c++
+COMPILEOPTS += -DTEST_NEWLINE_COUNT=20
+
 ##############################################################################
 # RISC-V Tests                                                               #
 ##############################################################################
+LANGUAGES += c++
+COMPILER   = riscv-elf-g++
+LINKER     = riscv-elf-g++
 
-# FIXME: Figure out how to build tests that run on a RISC-V machine
+# Some arithmetic tests for the BigInt
+BINARIES    += riscv-bigint
+COMPILEOPTS += -DBIGINT_TEST_HARNESS
+COMPILEOPTS += -DBIGINT_TEST_BIT_LENGTH=256
+SOURCES     += shim/bigint.c++
+CONFIG      += testbigint
+
+# Some arithmetic tests for the ModInt
+BINARIES    += riscv-modint
+COMPILEOPTS += -DMODINT_TEST_HARNESS
+COMPILEOPTS += -DMODINT_TEST_BIT_LENGTH=256
+SOURCES     += shim/modint.c++
+CONFIG      += testmodint
+
+# NIST published point test cases
+BINARIES    += riscv-point
+COMPILEOPTS += -DPOINT_TEST_HARNESS
+SOURCES     += shim/point.c++
+CONFIG      += testpoint
 
 ##############################################################################
 # x86 Tests                                                                  #
 ##############################################################################
-
-# FIXME: Write tests that actually run using some of my own code.
+LANGUAGES += c++
+COMPILER   = g++
+LINKER     = g++
 
 # Some arithmetic tests for the BigInt
 BINARIES    += bigint
@@ -41,6 +69,13 @@ BINARIES    += point
 COMPILEOPTS += -DPOINT_TEST_HARNESS
 SOURCES     += shim/point.c++
 CONFIG      += testpoint
+
+##############################################################################
+# OpenSSL Tests                                                              #
+##############################################################################
+LANGUAGES += c++
+COMPILER   = g++
+LINKER     = g++
 
 # The remaining tests use OpenSSL to verify that all the crypto code I
 # wrote is actually somewhat sane.

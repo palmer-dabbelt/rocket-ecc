@@ -25,11 +25,13 @@ Point::Point(const ModInt &x, const ModInt &y, const Curve *c)
 const char *Point::hex_cstr(void) const
 {
     char *out;
-    int r;
+    std::string x_str, y_str;
 
-    r = asprintf(&out, "04%s%s", this->x_hex().c_str(), this->y_hex().c_str());
-    if (r <= 0)
-        abort();
+    x_str = this->x_hex();
+    y_str = this->y_hex();
+
+    out = (char *)malloc(strlen(x_str.c_str()) + strlen(y_str.c_str()) + 3);
+    sprintf(out, "04%s%s", x_str.c_str(), y_str.c_str());
 
     return out;
 }
@@ -103,6 +105,9 @@ int main(int argc, char **argv)
         }
 #endif
     }
+
+    for (i = 0; i < TEST_NEWLINE_COUNT; i++)
+        std::cout << "\n";
 
     std::cout << ps.top().x_hex() << " " << ps.top().y_hex() << "\n";
 }
