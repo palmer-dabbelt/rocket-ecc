@@ -1,0 +1,13 @@
+[0m[[0minfo[0m] [0mRunning Work.Work --backend c --targetDir ../emulator/generated-src[0m
+[0m[[0mdebug[0m] [0mStarting sandboxed run...[0m
+[0m[[0mdebug[0m] [0mWaiting for threads to exit or System.exit to be called.[0m
+[0m[[0mdebug[0m] [0m  Classpath:[0m
+[0m[[0mdebug[0m] [0m	/Users/linger/cs250paper/rocket-ecc/chisel/sbt/work/target/scala-2.10/classes[0m
+[0m[[0mdebug[0m] [0m	/Users/linger/.sbt/boot/scala-2.10.2/lib/scala-library.jar[0m
+[0m[[0mdebug[0m] [0m	/Users/linger/.ivy2/cache/edu.berkeley.cs/chisel_2.10/jars/chisel_2.10-2.0.jar[0m
+[0m[[0mdebug[0m] [0m	/Users/linger/.ivy2/cache/reaktor/scct_2.10/jars/scct_2.10-0.2-SNAPSHOT.jar[0m
+[0m[[0mdebug[0m] [0mWaiting for thread run-main to exit[0m
+[0m[[0mdebug[0m] [0m	Thread run-main exited.[0m
+[0m[[0mdebug[0m] [0mInterrupting remaining threads (should be all daemons).[0m
+[0m[[0mdebug[0m] [0mSandboxed run complete..[0m
+[0m[[0mdebug[0m] [0mExited with code 0[0m

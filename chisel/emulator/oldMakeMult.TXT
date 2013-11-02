@@ -1,0 +1,23 @@
+LDFLAGS = -g
+CPPFLAGS = -g -I./generated-src
+CPP = g++
+INCLUDES = generated-src/emulator.h generated-src/multiplyControl.h
+
+default : all
+
+multiplyControl.o: generated-src/multiplyControl.cpp $(INCLUDES)
+	$(CPP) $(CPPFLAGS) -c $<
+
+multiplyControl-emulator.o: testbench/multiplyControl-emulator.cpp $(INCLUDES)
+	$(CPP) $(CPPFLAGS) -c $<
+
+multiplyControl-emulator: multiplyControl-emulator.o multiplyControl.o
+	$(CPP) $(LDFLAGS) -o $@ $+
+
+run : multiplyControl-emulator
+	./multiplyControl-emulator
+
+all : multiplyControl-emulator
+
+clean :
+	rm multiplyControl-emulator.o multiplyControl.o multiplyControl-emulator
