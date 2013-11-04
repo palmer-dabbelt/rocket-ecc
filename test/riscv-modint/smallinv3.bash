@@ -1,1 +1,0 @@
-../modint/smallinv3.bash

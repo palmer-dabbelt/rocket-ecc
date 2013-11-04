@@ -37,7 +37,6 @@ ModInt run_in_chisel(const ModInt &a,
 {
     ModIntHarness_t dut;
     int i;
-    FILE *f = fopen("/tmp/null", "w");
 
     assert(a.mod() == b.mod());
 
@@ -46,9 +45,7 @@ ModInt run_in_chisel(const ModInt &a,
 
     for (i = 0; i < INIT_CYCLE_COUNT; i++) {
         dut.clock_lo(true);
-        dut.dump(f, 2*i+0);
         dut.clock_hi(true);
-        dut.dump(f, 2*i+1);
     }
 
     dut.ModIntHarness__io_run = true;
@@ -59,9 +56,7 @@ ModInt run_in_chisel(const ModInt &a,
 
     do {
         dut.clock_lo(false);
-        dut.dump(f, 2*i+0);
         dut.clock_hi(false);
-        dut.dump(f, 2*i+1);
 
         dut.ModIntHarness__io_run = false;
 
@@ -73,9 +68,7 @@ ModInt run_in_chisel(const ModInt &a,
 
     for (int j = 0; j < INIT_CYCLE_COUNT; j++, i++) {
         dut.clock_hi(false);
-        dut.dump(f, 2*i+0);
         dut.clock_lo(false);
-        dut.dump(f, 2*i+1);
     }
 
     BigInt bi((uint64_t *)&dut.ModIntHarness__io_out.values,
