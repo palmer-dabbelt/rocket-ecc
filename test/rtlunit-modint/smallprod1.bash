@@ -1,0 +1,1 @@
+../modint/smallprod1.bash

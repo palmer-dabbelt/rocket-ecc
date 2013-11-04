@@ -16,8 +16,8 @@ enum func_type {
     FUNC_TYPE_MOD = 3
 };
 
-/* These are some accessor functions to map between BigInts and Chisel
- * UInts. */
+/* These are some accessor functions to map between c++ BigInts and Chisel
+ * BigUInts. */
 static BigInt run_in_chisel(const BigInt &, const BigInt &, enum func_type);
 
 /* Here we overload some BigInt functions that can be tested directly

@@ -18,6 +18,11 @@ public:
     ModInt(std::string hex, int offest, int bit_length, BigInt mod);
     ModInt(BigInt data, BigInt mod);
 
+    /* Accessor functions for the data that lives inside here.  You
+     * probably shouldn't be looking at these directly... */
+    BigInt data(void) const { return this->_data; }
+    BigInt mod(void) const { return this->_mod; }
+
     /* Returns this integer as a hex string (the data, not the
      * modulus). */
     std::string hex(void) const { return _data.hex(); }
@@ -57,7 +62,7 @@ public:
 
     /* Returns the inverse of this value, returned as a BigInt because
      * that's how it's used by the divide code. */
-    ModInt inverse(void) const;
+    ModInt inverse(void) const __attribute__((weak));
 };
 
 #endif

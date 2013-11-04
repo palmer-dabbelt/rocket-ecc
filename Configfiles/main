@@ -50,6 +50,17 @@ DEPLIBS     += chiselcrypt
 SOURCES     += rtlunit/bigint/redirect.c++
 CONFIG      += testbigint
 
+# Some arithmetic tests for the ModInt
+BINARIES    += rtlunit-modint
+COMPILEOPTS += -Isrc/shim
+COMPILEOPTS += -DMODINT_TEST_HARNESS
+COMPILEOPTS += -DMODINT_TEST_BIT_LENGTH=256
+SOURCES     += rtlunit/modint/main.scala
+COMPILEOPTS += -dModIntHarness
+DEPLIBS     += chiselcrypt
+SOURCES     += rtlunit/modint/redirect.c++
+CONFIG      += testmodint
+
 ##############################################################################
 # RISC-V Tests                                                               #
 ##############################################################################
