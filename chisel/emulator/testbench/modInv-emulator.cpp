@@ -1,7 +1,7 @@
 #include "modInv.h"
 
-static uint32_t src[][2] = { {48, 59}, {52, 73}};
-static uint32_t sink[] = {16, 66};
+static uint32_t src[][2] = { {48, 59}, {52, 73}, {59, 48}, {234523, 51}};
+static uint32_t sink[] = {16, 66, 35, 49};
 
 int main (int argc, char* argv[]) {
 
@@ -11,7 +11,7 @@ int main (int argc, char* argv[]) {
 
 	c-> init();
 
-	uint32_t num_tests = 2;
+	uint32_t num_tests = 4;
 	uint32_t testCount = 1;
 
 	int cycle;

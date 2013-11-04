@@ -38,7 +38,7 @@ class modInv extends Module {
 	val state = Reg(UInt(0, 3))
 
 	//Valid when you are in the finish state
-	io.control_resp_val := (state === UInt(3))
+	io.control_resp_val := (state === UInt(4))
 
 	//Idle State, grab operands when valid signal goes high
 	when(state === UInt(0)){
@@ -58,14 +58,29 @@ class modInv extends Module {
 		}
 	}
 
+	when(state === UInt(1)){
+		when(v >= u){
+			v := v - u
+		}
+		.otherwise{
+			state := UInt(2)
+		}
+	}
 
 	//Phase 1 of algorithm 1 in McIvor paper, don't ask me why it works :)
-	when(state === UInt(1)){
+	when(state === UInt(2)){
 
 		when(v === UInt(0, 256)){
 			//go to next phase
-			r1 := modulo - s1
-			state := UInt(2)
+
+			when(s1 >= modulo){
+				r1 := modulo + modulo - s1
+			}
+			.otherwise{
+				r1 := modulo - s1
+			}
+
+			state := UInt(3)
 		}
 
 		otherwise{
@@ -98,7 +113,7 @@ class modInv extends Module {
 	}
 
 	//Phase 2 of algorithm 2 in McIvor paper
-	when(state === UInt(2)){
+	when(state === UInt(3)){
 
 		when(r1(0) === UInt(0)){
 			r1 := r1 >> UInt(1)
@@ -111,12 +126,12 @@ class modInv extends Module {
 		z := z - UInt(1)
 
 		when(z === UInt(2)){
-			state := UInt(3)
+			state := UInt(4)
 		}
 	}
 
 	//Finish state
-	when(state === UInt(3)){
+	when(state === UInt(4)){
 		io.control_resp_data := r1
 		state := UInt(0)
 	}

@@ -16,13 +16,13 @@ class modInv_t : public mod_t {
   dat_t<256> modInv__s1_shadow;
   dat_t<256> modInv__z;
   dat_t<256> modInv__z_shadow;
-  dat_t<256> modInv__u;
-  dat_t<256> modInv__u_shadow;
   dat_t<256> modInv__io_control_req_operand;
   dat_t<256> modInv__v;
   dat_t<256> modInv__v_shadow;
-  dat_t<2> modInv__state;
-  dat_t<2> modInv__state_shadow;
+  dat_t<256> modInv__u;
+  dat_t<256> modInv__u_shadow;
+  dat_t<3> modInv__state;
+  dat_t<3> modInv__state_shadow;
   dat_t<256> modInv__r1;
   dat_t<256> modInv__r1_shadow;
   dat_t<256> modInv__io_control_resp_data;
