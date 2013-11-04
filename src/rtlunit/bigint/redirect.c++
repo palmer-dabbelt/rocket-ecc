@@ -4,7 +4,7 @@
 #include <assert.h>
 
 #ifndef INIT_CYCLE_COUNT
-#define INIT_CYCLE_COUNT 20
+#define INIT_CYCLE_COUNT 2
 #endif
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
