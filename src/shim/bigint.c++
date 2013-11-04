@@ -72,6 +72,14 @@ BigInt::BigInt(int value, int bit_length)
     this->_data[this->word_length() - 1] = value;
 }
 
+BigInt::BigInt(const bigint_datum_t *a, bool overflow, int bit_length)
+    : _bit_length(bit_length),
+      _overflow(overflow)
+{
+    for (int i = 0; i < this->word_length(); i++)
+        this->_data[i] = a[this->word_length() - i - 1];
+}
+
 std::string BigInt::hex(void) const
 {
     char buf[1024];
@@ -173,7 +181,8 @@ BigInt BigInt::trunc(int new_bit_length) const
     return out;
 }
 
-BigInt operator+(const BigInt &a, const BigInt &b)
+BigInt operator+(const BigInt &a, const BigInt &b)  __attribute__((weak));
+BigInt operator+(const BigInt &a, const BigInt &b) 
 {
     assert(sizeof(a._data[0]) == 8);
     assert(a.bit_length() == b.bit_length());
@@ -192,6 +201,7 @@ BigInt operator+(const BigInt &a, const BigInt &b)
     return out;
 }
 
+BigInt operator-(const BigInt &a, const BigInt &b) __attribute__((weak));
 BigInt operator-(const BigInt &a, const BigInt &b)
 {
     assert(a.bit_length() == b.bit_length());
@@ -206,6 +216,7 @@ BigInt operator-(const BigInt &a, const BigInt &b)
     return out;
 }
 
+BigInt operator*(const BigInt &a, const BigInt &b) __attribute__((weak));
 BigInt operator*(const BigInt &a, const BigInt &b)
 {
     assert(sizeof(a._data[0]) == 8);
@@ -246,6 +257,7 @@ BigInt operator*(const BigInt &a, const BigInt &b)
     return out;
 }
 
+BigInt operator%(const BigInt &x, const BigInt &m) __attribute__((weak));
 BigInt operator%(const BigInt &x, const BigInt &m)
 {
     assert(m != 0);
@@ -384,6 +396,12 @@ BigInt add_shift_one(const BigInt &a, const BigInt &b)
         return out + 1;
 
     return out;
+}
+
+void BigInt::write_array(bigint_datum_t *a) const
+{
+    for (int i = 0; i < this->word_length(); i++)
+        a[i] = this->_data[this->word_length() - i - 1];
 }
 
 int hex2int(unsigned char c)

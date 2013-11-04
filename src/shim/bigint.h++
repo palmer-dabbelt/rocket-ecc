@@ -42,6 +42,9 @@ public:
      * acceptable. */
     BigInt(int value, int bit_length);
 
+    /* Generates a new BigInt from a word array. */
+    BigInt(const bigint_datum_t *a, bool overflow, int bit_length);
+
     /* Returns this integer as a hex string. */
     std::string hex(void) const;
     const char *hex_cstr(void) const;
@@ -120,6 +123,9 @@ public:
 
     /* Some special operators useful for various crypto algorithms. */
     friend BigInt add_shift_one(const BigInt &a, const BigInt &b);
+
+    /* Writes this out to an array of different types. */
+    void write_array(bigint_datum_t *a) const;
 };
 
 #endif

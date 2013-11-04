@@ -1,0 +1,1 @@
+../bigint/smallmod1.bash
