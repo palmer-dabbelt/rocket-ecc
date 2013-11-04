@@ -44,6 +44,13 @@ class ModIntHarness extends Module {
   modinv.io.control_req_operand := io.ina
   modinv.io.control_req_modulo  := io.mod
 
+  // ... and a single modMultiply to compute products
+  val modmul = Module(new modMultiply)
+  modmul.io.control_req_val    := Bool(false)
+  modmul.io.control_req_op1    := io.ina
+  modmul.io.control_req_op2    := io.inb
+  modmul.io.control_req_modulo := io.mod
+
   // Here we attempt to pull new arguments into this unit.  Note that
   // sometimes we're going to pass them directly on to the ModInv unit
   // and sometimes we're going to do them as a single cycle.
@@ -56,6 +63,8 @@ class ModIntHarness extends Module {
 
     when (io.func === UInt(3)) {
       modinv.io.control_req_val := Bool(true)
+    }.elsewhen (io.func === UInt(2)) {
+      modmul.io.control_req_val := Bool(true)
     }
   }
 
@@ -64,6 +73,13 @@ class ModIntHarness extends Module {
   when (busy && io.func === UInt(3) && modinv.io.control_resp_val) {
     busy := Bool(false)
     out  := modinv.io.control_resp_data
+  }
+
+  // Check to see if the ModMul unit has finished, which means we can
+  // return data back to the caller
+  when (busy && io.func === UInt(2) && modmul.io.control_resp_val) {
+    busy := Bool(false)
+    out  := modmul.io.control_resp_data
   }
 }
 

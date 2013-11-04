@@ -53,6 +53,7 @@ ModInt operator-(const ModInt &a, const ModInt &b)
     return out;
 }
 
+ModInt operator*(const ModInt &a, const ModInt &b) __attribute__((weak));
 ModInt operator*(const ModInt &a, const ModInt &b)
 {
     assert(a._mod == b._mod);
