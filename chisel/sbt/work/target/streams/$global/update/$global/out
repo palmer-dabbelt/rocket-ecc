@@ -7,7 +7,7 @@
 [0m[[0mdebug[0m] [0m== resolving dependencies for edu.berkeley.cs#work_2.10;1.1 [compile][0m
 [0m[[0mdebug[0m] [0m== resolving dependencies edu.berkeley.cs#work_2.10;1.1->org.scala-lang#scala-library;2.10.2 [compile->default(compile)][0m
 [0m[[0minfo[0m] [0mResolving org.scala-lang#scala-library;2.10.2 ...[0m
-[0m[[0mdebug[0m] [0msbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@277b65b1[0m
+[0m[[0mdebug[0m] [0msbt-chain: Checking cache for: sbt.ivyint.MergedDescriptors@5381062e[0m
 [0m[[0mdebug[0m] [0msbt-chain: module revision found in cache: org.scala-lang#scala-library;2.10.2[0m
 [0m[[0mdebug[0m] [0m	local: revision in cache: org.scala-lang#scala-library;2.10.2[0m
 [0m[[0mdebug[0m] [0m	found org.scala-lang#scala-library;2.10.2 in sbt-chain[0m
@@ -271,7 +271,7 @@
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.scala-lang#scala-reflect;2.10.2!scala-reflect.jar[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.scala-lang#jline;2.10.2!jline.jar[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.fusesource.jansi#jansi;1.4!jansi.jar[0m
-[0m[[0mdebug[0m] [0m:: resolution report :: resolve 951ms :: artifacts dl 6ms[0m
+[0m[[0mdebug[0m] [0m:: resolution report :: resolve 1189ms :: artifacts dl 7ms[0m
 [0m[[0mdebug[0m] [0m	report for edu.berkeley.cs#work_2.10;1.1 compile produced in /Users/linger/cs250paper/rocket-ecc/chisel/sbt/work/target/resolution-cache/reports/edu.berkeley.cs-work_2.10-compile.xml[0m
 [0m[[0mdebug[0m] [0m	report for edu.berkeley.cs#work_2.10;1.1 runtime produced in /Users/linger/cs250paper/rocket-ecc/chisel/sbt/work/target/resolution-cache/reports/edu.berkeley.cs-work_2.10-runtime.xml[0m
 [0m[[0mdebug[0m] [0m	report for edu.berkeley.cs#work_2.10;1.1 test produced in /Users/linger/cs250paper/rocket-ecc/chisel/sbt/work/target/resolution-cache/reports/edu.berkeley.cs-work_2.10-test.xml[0m
@@ -285,5 +285,5 @@
 [0m[[0mdebug[0m] [0m	report for edu.berkeley.cs#work_2.10;1.1 docs produced in /Users/linger/cs250paper/rocket-ecc/chisel/sbt/work/target/resolution-cache/reports/edu.berkeley.cs-work_2.10-docs.xml[0m
 [0m[[0mdebug[0m] [0m	report for edu.berkeley.cs#work_2.10;1.1 pom produced in /Users/linger/cs250paper/rocket-ecc/chisel/sbt/work/target/resolution-cache/reports/edu.berkeley.cs-work_2.10-pom.xml[0m
 [0m[[0mdebug[0m] [0m	report for edu.berkeley.cs#work_2.10;1.1 scala-tool produced in /Users/linger/cs250paper/rocket-ecc/chisel/sbt/work/target/resolution-cache/reports/edu.berkeley.cs-work_2.10-scala-tool.xml[0m
-[0m[[0mdebug[0m] [0m	resolve done (951ms resolve - 6ms download)[0m
+[0m[[0mdebug[0m] [0m	resolve done (1189ms resolve - 7ms download)[0m
 [0m[[0minfo[0m] [0mDone updating.[0m
