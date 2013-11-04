@@ -1,5 +1,5 @@
 import Chisel._
-//import ChiselCrypt._
+import ChiselCrypt._
 
 class BigIntHarness extends Module {
   class IO extends Bundle {
@@ -31,33 +31,40 @@ class BigIntHarness extends Module {
 
   // This just registers all the state so we can somewhat dissociate
   // ourselves from the block that runs this code.
-  val ina  = Reg(init = UInt(0, width=512));  ina  := ina
-  val inao  = Reg(init = Bool(false));        inao := inao
-  val inb  = Reg(init = UInt(0, width=512));  inb  := inb
-  val inbo  = Reg(init = Bool(false));        inbo := inbo
-  val func = Reg(io.func);                    func := func
-  val out  = Reg(init = UInt(0, width=512));  out  := out
+  val ina  = Reg(new BigUInt); ina  := ina
+  val inb  = Reg(new BigUInt); inb  := inb
+  val func = Reg(io.func);     func := func
+  val out  = Reg(new BigUInt); out  := out
 
   // The "run" command signals that there's work to be done.  We only
   // accept "run" commands when we're not busy to avoid losing things.
   when (!busy && io.run) {
     busy := Bool(true)
-    ina  := io.ina
-    inao := io.inao
-    inb  := io.inb
-    inbo := io.inbo
-    func := io.func
+    ina.data := io.ina
+    ina.oflo := io.inao
+    inb.data := io.inb
+    inb.oflo := io.inbo
+    func     := io.func
+  }.otherwise {
+    busy := Bool(true)
+    func     := func
   }
+
+  // FIXME: These have to be written here as otherwise it seems that
+  // Chisel builds some internal nodes and barfs about them not having
+  val add = ina + inb
+  val sub = ina - inb
+  val mul = ina * inb
 
   // Here's the actual compute block.  Be sure this switch statement
   // matches with the C++ test code!
   when (busy) {
     when (func === UInt(0)) {
-      out := ina + inb
+      out := add // ina + inb
     }.elsewhen (func === UInt(1)) {
-      out := ina - inb
+      out := sub // ina - inb
     }.elsewhen (func === UInt(2)) {
-      out := ina * inb
+      out := mul // ina * inb
     }
 
     busy := Bool(false)
@@ -65,8 +72,8 @@ class BigIntHarness extends Module {
 
   // We output both the low bits and a flag that determines if there
   // is overflow.
-  io.out  := out
-  io.oflo := (out > (UInt(1) << UInt(256))) || inao || inbo
+  io.out  := out.data
+  io.oflo := out.oflo
 }
 
 object Main {

@@ -36,6 +36,7 @@ COMPILEOPTS += `ppkg-config chisel --cflags`
 # Install a Chisel library, which is really just a Scala JAR
 LIBRARIES   += libchiselcrypt.jar
 COMPILEOPTS += `ppkg-config chisel --libs`
+LINKOPTS    += `ppkg-config chisel --libs`
 SOURCES     += chiselcrypt/library.scala
 
 # Some arithmetic tests for the BigInt
@@ -43,9 +44,10 @@ BINARIES    += rtlunit-bigint
 COMPILEOPTS += -Isrc/shim
 COMPILEOPTS += -DBIGINT_TEST_HARNESS
 COMPILEOPTS += -DBIGINT_TEST_BIT_LENGTH=256
-SOURCES     += chiselcrypt-rtlunit/bigint/main.scala
+SOURCES     += rtlunit/bigint/main.scala
 COMPILEOPTS += -dBigIntHarness
-SOURCES     += chiselcrypt-rtlunit/bigint/redirect.c++
+DEPLIBS     += chiselcrypt
+SOURCES     += rtlunit/bigint/redirect.c++
 CONFIG      += testbigint
 
 ##############################################################################
