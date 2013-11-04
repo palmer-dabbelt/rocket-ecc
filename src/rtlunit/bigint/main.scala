@@ -45,9 +45,6 @@ class BigIntHarness extends Module {
     inb.data := io.inb
     inb.oflo := io.inbo
     func     := io.func
-  }.otherwise {
-    busy := Bool(true)
-    func     := func
   }
 
   // FIXME: These have to be written here as otherwise it seems that
