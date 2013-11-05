@@ -79,6 +79,29 @@ Point point_dub(const Point &P)
     return Point(Rx, Ry, c);
 }
 
+Point operator*(ModInt &d, Point &P)
+{
+    Point R = Point(P._c->field(0), P._c->field(0), P._c);
+    Point Q = P;
+    bool set = false;
+
+    for (int i = 0; i < d.bit_length(); i++) {
+        if (d.is_odd()) {
+            if (set)
+                R = R + Q;
+            else
+                R = Q;
+
+            set = true;
+        }
+
+        d = d >> 1;
+        Q = Q + Q;
+    }
+
+    return R;
+}
+
 #ifdef POINT_TEST_HARNESS
 int main(int argc, char **argv)
 {
@@ -101,6 +124,10 @@ int main(int argc, char **argv)
         } else if (strcmp(argv[i], "pointdub") == 0) {
             Point x = ps.top(); ps.pop();
             ps.push(x + x);
+        } else if (strcmp(argv[i], "pointmul") == 0) {
+            ModInt d = is.top(); is.pop();
+            Point  P = ps.top(); ps.pop();
+            ps.push(d * P);
         } else {
             BigInt bi(argv[i], c->bit_length());
             is.push(c->field(bi));

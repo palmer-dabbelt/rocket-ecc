@@ -37,20 +37,26 @@ public:
      * data, not the mod). */
     const unsigned char *byte_str(void) const { return _data.byte_str(); }
 
+    /* This lets us easily check if the number is odd or even. */
+    bool is_even(void) const { return this->_data.is_even(); }
+    bool is_odd(void) const { return this->_data.is_odd(); }
+
     /* Here's a number of arithmatic operations that can be done on a
      * ModInt, all of which do their associated operation in modular
      * arithmetic. */
     friend ModInt operator+(const ModInt &a, const ModInt &b);
 
     friend ModInt operator-(const ModInt &a, const ModInt &b);
+    friend ModInt operator-(int a, const ModInt &b)
+        { return ModInt(BigInt(a, b._data.bit_length()), b._mod) - b; }
+    friend ModInt operator-(const ModInt &a, int b)
+        { return a - ModInt(BigInt(b, a._data.bit_length()), a._mod); }
 
     friend ModInt operator*(const ModInt &a, const ModInt &b);
-    friend ModInt operator*(int a, const ModInt &b) {
-        return ModInt(BigInt(a, b._data.bit_length()), b._mod) * b;
-    }
-    friend ModInt operator*(const ModInt &a, int b) {
-        return a * ModInt(BigInt(b, a._data.bit_length()), a._mod);
-    }
+    friend ModInt operator*(int a, const ModInt &b)
+        { return ModInt(BigInt(a, b._data.bit_length()), b._mod) * b; }
+    friend ModInt operator*(const ModInt &a, int b)
+        { return a * ModInt(BigInt(b, a._data.bit_length()), a._mod); }
 
     friend ModInt operator/(const ModInt &a, const ModInt &b);
 
@@ -68,6 +74,10 @@ public:
         { return !(a == b); }
     friend bool operator!=(int a, const ModInt &b)
         { return !(a == b); }
+
+    /* Logical Operators. */
+    friend ModInt operator>>(const ModInt &m, int i)
+        { return ModInt(m._data >> i, m._mod); }
 
     /* Returns the inverse of this value, returned as a BigInt because
      * that's how it's used by the divide code. */

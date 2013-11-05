@@ -10,8 +10,8 @@ class Point
 {
 protected:
     const Curve *_c;
-    const ModInt _x;
-    const ModInt _y;
+    ModInt _x;
+    ModInt _y;
 
 public:
     /* This constructs a new EC point from a single long string.  The
@@ -44,6 +44,9 @@ public:
     friend Point operator+(const Point &P, const Point &Q);
     friend Point point_add(const Point &P, const Point &Q);
     friend Point point_dub(const Point &P);
+
+    friend Point operator*(ModInt &d, Point &P);
+    friend Point operator*(Point &P, ModInt &d) { return d * P; }
 
     /* Comparison operators. */
     friend bool operator==(const Point &P, const Point &Q) {

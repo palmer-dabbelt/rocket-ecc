@@ -58,6 +58,8 @@ public:
     int bit_length(void) const { return _bit_length; }
 
     /* Generates an integer in this field. */
+    ModInt field(const int x) const
+        { return this->field(BigInt(x, this->_p.bit_length())); }
     ModInt field(const BigInt &x) const { return ModInt(x, this->_p); }
 
     /* The parameters of this curve, as defined by NIST. */

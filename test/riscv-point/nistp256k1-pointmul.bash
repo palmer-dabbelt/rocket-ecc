@@ -1,0 +1,1 @@
+../point/nistp256k1-pointmul.bash
