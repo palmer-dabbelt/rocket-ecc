@@ -26,10 +26,10 @@ class modInv extends Module {
 	val modulo = Reg(Bits(0, 256))
 	val u = Reg(Bits(0, 256))
 	val v = Reg(Bits(0, 256))
-	val s1 = Reg(Bits(0, 256))
-	val s2 = Reg(Bits(0, 256))	
-	val z = Reg(Bits(0, 256))
-	val r1 = Reg(Bits(0, 258))
+	val s1 = Reg(Bits(0, 512))
+	val s2 = Reg(Bits(0, 512))	
+	val z = Reg(Bits(0, 512))
+	val r1 = Reg(Bits(0, 512))
 
 	//Default values of outputs
 	io.control_resp_data := Bits(0, 256)
@@ -48,10 +48,10 @@ class modInv extends Module {
 
 			u := io.control_req_modulo
 			v := io.control_req_operand
-			s1 := Bits(0, 256)
-			s2 := Bits(1, 256)
-			z := Bits(0, 256)
-			r1 := Bits(0, 258)
+			s1 := Bits(0, 512)
+			s2 := Bits(1, 512)
+			z := Bits(0, 512)
+			r1 := Bits(0, 512)
 
 
 			state := UInt(1)	
@@ -74,7 +74,7 @@ class modInv extends Module {
 			//go to next phase
 
 			when(s1 >= modulo){
-				r1 := modulo + modulo - s1
+				r1 := (modulo << UInt(1)) - s1
 			}
 			.otherwise{
 				r1 := modulo - s1
@@ -83,27 +83,27 @@ class modInv extends Module {
 			state := UInt(3)
 		}
 
-		otherwise{
+		.otherwise{
 			when(u(0) === UInt(0)){
 				u := u >> UInt(1)
-				s2 := s2 + s2
+				s2 := (s2 << UInt(1))(511, 0)
 			}
 
 			.elsewhen(v(0) === UInt(0)){
 				v := v >> UInt(1)
-				s1 := s1 + s1
+				s1 := (s1 << UInt(1))(511, 0)
 			}
 
 			.elsewhen(u > v){
 				u := (u - v) >> UInt(1)
 				s1 := s1 + s2
-				s2 := s2 + s2
+				s2 := (s2 << UInt(1))(511, 0)
 			}
 
 			.otherwise{
 				v := (v - u) >> UInt(1)
 				s2 := s2 + s1
-				s1 := s1 + s1
+				s1 := (s1 << UInt(1))(511, 0)
 			}	
 
 			z := z + UInt(1)
@@ -115,7 +115,11 @@ class modInv extends Module {
 	//Phase 2 of algorithm 2 in McIvor paper
 	when(state === UInt(3)){
 
-		when(r1(0) === UInt(0)){
+		when(z === UInt(0)){
+			state := UInt(4)
+		}
+
+		.elsewhen(r1(0) === UInt(0)){
 			r1 := r1 >> UInt(1)
 		}
 
@@ -125,9 +129,6 @@ class modInv extends Module {
 
 		z := z - UInt(1)
 
-		when(z === UInt(2)){
-			state := UInt(4)
-		}
 	}
 
 	//Finish state
