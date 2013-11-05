@@ -42,6 +42,13 @@ public:
     /* These arithmatic operators compute the geometric definition of
      * elliptic curve field operations. */
     friend Point operator+(const Point &P, const Point &Q);
+    friend Point point_add(const Point &P, const Point &Q);
+    friend Point point_dub(const Point &P);
+
+    /* Comparison operators. */
+    friend bool operator==(const Point &P, const Point &Q) {
+        return (P._c == Q._c) && (P._x == Q._x) && (P._y == Q._y);
+    }
 };
 
 #endif

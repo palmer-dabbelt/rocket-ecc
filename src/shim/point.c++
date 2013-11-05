@@ -38,6 +38,14 @@ const char *Point::hex_cstr(void) const
 
 Point operator+(const Point &P, const Point &Q)
 {
+    if (P == Q)
+        return point_dub(P);
+    else
+        return point_add(P, Q);
+}
+
+Point point_add(const Point &P, const Point &Q)
+{
     assert(P._c == Q._c);
     const Curve *c = P._c;
 
@@ -50,6 +58,22 @@ Point operator+(const Point &P, const Point &Q)
     ModInt h2 = h * h;
 
     ModInt Rx = h2 - Px - Qx;
+    ModInt Ry = (h * (Px - Rx) - Py);
+
+    return Point(Rx, Ry, c);
+}
+
+Point point_dub(const Point &P)
+{
+    const Curve *c = P._c;
+
+    ModInt Px = P.x();
+    ModInt Py = P.y();
+
+    ModInt h = (3 * Px * Px + c->a()) / (2 * Py);
+    ModInt h2 = h * h;
+
+    ModInt Rx = h2 - Px - Px;
     ModInt Ry = (h * (Px - Rx) - Py);
 
     return Point(Rx, Ry, c);
@@ -74,36 +98,14 @@ int main(int argc, char **argv)
             Point y = ps.top(); ps.pop();
             Point x = ps.top(); ps.pop();
             ps.push(x + y);
+        } else if (strcmp(argv[i], "pointdub") == 0) {
+            Point x = ps.top(); ps.pop();
+            ps.push(x + x);
         } else {
             BigInt bi(argv[i], c->bit_length());
             is.push(c->field(bi));
             std::cerr << "read " << is.top().hex() << "\n";
         }
-
-#if 0
-        if (strcmp(argv[i], "+") == 0) {
-            BigInt a = stack.top(); stack.pop();
-            BigInt b = stack.top(); stack.pop();
-            std::cerr << "sum1 " << a.hex() << "\n";
-            std::cerr << "sum2 " << b.hex() << "\n";
-            stack.push(a + b);
-        } else if (strcmp(argv[i], "-") == 0) {
-            BigInt a = stack.top(); stack.pop();
-            BigInt b = stack.top(); stack.pop();
-            std::cerr << "diff1 " << a.hex() << "\n";
-            std::cerr << "diff2 " << b.hex() << "\n";
-            stack.push(a - b);
-        } else if (strcmp(argv[i], "x") == 0) {
-            BigInt a = stack.top(); stack.pop();
-            BigInt b = stack.top(); stack.pop();
-            std::cerr << "prod1 " << a.hex() << "\n";
-            std::cerr << "prod2 " << b.hex() << "\n";
-            stack.push(a * b);
-        } else {
-            stack.push(BigInt(argv[i], BIGINT_TEST_BIT_LENGTH));
-            std::cerr << "read " << stack.top().hex() << "\n";
-        }
-#endif
     }
 
     for (i = 0; i < TEST_NEWLINE_COUNT; i++)

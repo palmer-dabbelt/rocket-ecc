@@ -41,8 +41,17 @@ public:
      * ModInt, all of which do their associated operation in modular
      * arithmetic. */
     friend ModInt operator+(const ModInt &a, const ModInt &b);
+
     friend ModInt operator-(const ModInt &a, const ModInt &b);
+
     friend ModInt operator*(const ModInt &a, const ModInt &b);
+    friend ModInt operator*(int a, const ModInt &b) {
+        return ModInt(BigInt(a, b._data.bit_length()), b._mod) * b;
+    }
+    friend ModInt operator*(const ModInt &a, int b) {
+        return a * ModInt(BigInt(b, a._data.bit_length()), a._mod);
+    }
+
     friend ModInt operator/(const ModInt &a, const ModInt &b);
 
     /* Comparison operators. */
