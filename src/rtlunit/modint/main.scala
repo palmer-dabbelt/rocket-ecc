@@ -38,6 +38,24 @@ class ModIntHarness extends Module {
   val out  = Reg(io.out);  out  := out
   io.out := out
 
+  // Builds a pair of ModInts from the current state of the circuit.
+  // This is essentially a cast, but much uglier.
+  // FIXME: Make this pretty
+  val inami = new ModInt
+  inami.dat.data := ina
+  inami.dat.oflo := Bool(false)
+  inami.mod.data := mod
+  inami.mod.oflo := Bool(false)
+  val inbmi = new ModInt
+  inbmi.dat.data := inb
+  inbmi.dat.oflo := Bool(false)
+  inbmi.mod.data := mod
+  inbmi.mod.oflo := Bool(false)
+
+  // These results need to be placed outside of the switch statement
+  // below because otherwise Chisel barfs about unconnected inputs.
+  val add = inami + inbmi
+
   // We use a single ModInv unit to compute the modulo inverse
   val modinv = Module(new modInv)
   modinv.io.control_req_val     := Bool(false)
@@ -70,16 +88,21 @@ class ModIntHarness extends Module {
 
   // Check to see if the ModInv unit has finished, which means we can
   // return data back to the caller
-  when (busy && io.func === UInt(3) && modinv.io.control_resp_val) {
+  when (busy && func === UInt(3) && modinv.io.control_resp_val) {
     busy := Bool(false)
     out  := modinv.io.control_resp_data
   }
 
   // Check to see if the ModMul unit has finished, which means we can
   // return data back to the caller
-  when (busy && io.func === UInt(2) && modmul.io.control_resp_val) {
+  when (busy && func === UInt(2) && modmul.io.control_resp_val) {
     busy := Bool(false)
     out  := modmul.io.control_resp_data
+  }
+
+  when (busy && func === UInt(0)) {
+    busy := Bool(false)
+    out  := add.dat.data
   }
 }
 

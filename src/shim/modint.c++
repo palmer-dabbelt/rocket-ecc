@@ -27,6 +27,7 @@ ModInt::ModInt(BigInt data, BigInt mod)
     assert(!_data.overflow());
 }
 
+ModInt operator+(const ModInt &a, const ModInt &b) __attribute__((weak));
 ModInt operator+(const ModInt &a, const ModInt &b)
 {
     if (a._mod != b._mod)
@@ -42,6 +43,7 @@ ModInt operator+(const ModInt &a, const ModInt &b)
     return out;
 }
 
+ModInt operator-(const ModInt &a, const ModInt &b) __attribute__((weak));
 ModInt operator-(const ModInt &a, const ModInt &b)
 {
     if (a._mod != b._mod)

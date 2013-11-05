@@ -4,7 +4,7 @@
 #include <assert.h>
 
 #ifndef INIT_CYCLE_COUNT
-#define INIT_CYCLE_COUNT 2
+#define INIT_CYCLE_COUNT 10
 #endif
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
@@ -24,6 +24,11 @@ static ModInt run_in_chisel(const ModInt &a,
                             const ModInt &b,
                             enum func_type ft)
     __attribute__((unused));
+
+ModInt operator+(const ModInt &a, const ModInt &b)
+{
+    return run_in_chisel(a, b, FUNC_TYPE_ADD);
+}
 
 #if 0
 ModInt operator*(const ModInt &a, const ModInt &b)
@@ -46,6 +51,9 @@ ModInt run_in_chisel(const ModInt &a,
 {
     ModIntHarness_t dut;
     int i;
+#ifdef PRINT_FILE
+    FILE *f = fopen("/tmp/chisel.vcd", "w");
+#endif
 
     assert(a.mod() == b.mod());
 
@@ -53,8 +61,10 @@ ModInt run_in_chisel(const ModInt &a,
     dut.ModIntHarness__io_run = false;
 
     for (i = 0; i < INIT_CYCLE_COUNT; i++) {
-        dut.clock_lo(true);
-        dut.clock_hi(true);
+        dut.clock(true);
+#ifdef PRINT_FILE
+        dut.dump(f, i);
+#endif
     }
 
     dut.ModIntHarness__io_run = true;
@@ -64,12 +74,14 @@ ModInt run_in_chisel(const ModInt &a,
     dut.ModIntHarness__io_func = ft;
 
     do {
-        dut.clock_lo(false);
-        dut.clock_hi(false);
+        dut.clock(false);
+#ifdef PRINT_FILE
+        dut.dump(f, i);
+#endif
 
         dut.ModIntHarness__io_run = false;
 
-        if (i > 1000 * 1000) {
+        if (i > 1000) {
             fprintf(stderr, "ModInt tests ran past %d cycles, aborting\n", i);
             fprintf(stderr, "Function was %d\n", ft);
             abort();
@@ -79,8 +91,10 @@ ModInt run_in_chisel(const ModInt &a,
     } while (dut.ModIntHarness__io_busy.to_ulong() == 1);
 
     for (int j = 0; j < INIT_CYCLE_COUNT; j++, i++) {
-        dut.clock_hi(false);
-        dut.clock_lo(false);
+        dut.clock(false);
+#ifdef PRINT_FILE
+        dut.dump(f, i);
+#endif
     }
 
     BigInt bi((uint64_t *)&dut.ModIntHarness__io_out.values,
