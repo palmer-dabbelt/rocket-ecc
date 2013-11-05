@@ -16,3 +16,8 @@ TESTSRC += smallmod1.bash
 
 TESTSRC += randommod1.bash
 TESTSRC += randommod2.bash
+
+TESTSRC += smalllsh1.bash
+TESTSRC += smalllsh2.bash
+TESTSRC += smalllsh3.bash
+TESTSRC += smalllsh4.bash

@@ -310,10 +310,58 @@ BigInt BigInt::operator~(void) const
 
 BigInt BigInt::operator<<(int i) const
 {
+    static const int max_bit_length = (sizeof(bigint_datum_t) * 8);
+
+    assert(i < BIGINT_MAX_BIT_LENGTH);
+    assert(i < this->bit_length());
+
+    if (i > max_bit_length) {
+        BigInt near = (*this << max_bit_length);
+        BigInt far = near << (i - max_bit_length);
+
+        if (near._overflow)
+            far._overflow = true;
+
+        return far;
+    }
+
+    if (i == max_bit_length) {
+        BigInt out(*this);
+
+        out._overflow = (out._data[0] > 0);
+
+        for (int j = 0; j < this->word_length()-1; j++)
+            out._data[j] = out._data[j+1];
+
+        out._data[this->word_length()-1] = 0;
+        return out;
+    }
+
     BigInt out(*this);
 
-    for (; i > 0; i--)
-        out = out + out;
+    {
+        bigint_double_datum_t d;
+        d = this->_data[0];
+        d <<= i;
+        d >>= (sizeof(d) * 4);
+        out._overflow = (d > 0);
+    }
+
+    for (int j = 0; j < this->word_length()-1; j++) {
+        bigint_double_datum_t d;
+
+        d = this->_data[j];
+        d <<= (sizeof(d) * 4);
+        d |= this->_data[j+1];
+
+        d <<= i;
+
+        out._data[j] = (d >> (sizeof(d) * 4));
+    }
+
+    out._data[this->word_length()-1] <<= i;
+    if (i == max_bit_length)
+        out._data[this->word_length()-1] = 0;
 
     return out;
 }
@@ -467,6 +515,18 @@ int main(int argc, char **argv)
             std::cerr << "mod1 " << a.hex() << "\n";
             std::cerr << "mod2 " << b.hex() << "\n";
             stack.push(a % b);
+        } else if (strcmp(argv[i], "lsh") == 0) {
+            BigInt d = stack.top(); stack.pop();
+            int b = atoi(argv[++i]);
+            std::cerr << "lshD " << d.hex() << "\n";
+            std::cerr << "lshB " << b << "\n";
+            stack.push(d << b);
+        } else if (strcmp(argv[i], "rsh") == 0) {
+            BigInt d = stack.top(); stack.pop();
+            int b = atoi(argv[++i]);
+            std::cerr << "rshD " << d.hex() << "\n";
+            std::cerr << "rshB " << b << "\n";
+            stack.push(d >> b);
         } else {
             stack.push(BigInt(argv[i], BIGINT_TEST_BIT_LENGTH));
             std::cerr << "read " << stack.top().hex() << "\n";
