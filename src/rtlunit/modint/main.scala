@@ -55,6 +55,7 @@ class ModIntHarness extends Module {
   // These results need to be placed outside of the switch statement
   // below because otherwise Chisel barfs about unconnected inputs.
   val add = inami + inbmi
+  val sub = inami - inbmi
 
   // We use a single ModInv unit to compute the modulo inverse
   val modinv = Module(new modInv)
@@ -103,6 +104,11 @@ class ModIntHarness extends Module {
   when (busy && func === UInt(0)) {
     busy := Bool(false)
     out  := add.dat.data
+  }
+
+  when (busy && func === UInt(1)) {
+    busy := Bool(false)
+    out  := sub.dat.data
   }
 }
 
