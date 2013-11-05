@@ -42,12 +42,10 @@ ModInt operator*(const ModInt &a, const ModInt &b)
 }
 #endif
 
-#if 0
 ModInt ModInt::inverse(void) const
 {
     return run_in_chisel(*this, *this, FUNC_TYPE_INV);
 }
-#endif
 
 /* Static Methods */
 ModInt run_in_chisel(const ModInt &a,
@@ -86,7 +84,7 @@ ModInt run_in_chisel(const ModInt &a,
 
         dut.ModIntHarness__io_run = false;
 
-        if (i > 1000) {
+        if (i > 10000) {
             fprintf(stderr, "ModInt tests ran past %d cycles, aborting\n", i);
             fprintf(stderr, "Function was %d\n", ft);
             abort();
