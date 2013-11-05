@@ -29,7 +29,7 @@ class modInv extends Module {
 	val s1 = Reg(Bits(0, 256))
 	val s2 = Reg(Bits(0, 256))	
 	val z = Reg(Bits(0, 256))
-	val r1 = Reg(Bits(0, 256))
+	val r1 = Reg(Bits(0, 258))
 
 	//Default values of outputs
 	io.control_resp_data := Bits(0, 256)
@@ -51,7 +51,7 @@ class modInv extends Module {
 			s1 := Bits(0, 256)
 			s2 := Bits(1, 256)
 			z := Bits(0, 256)
-			r1 := Bits(0, 256)
+			r1 := Bits(0, 258)
 
 
 			state := UInt(1)	
@@ -132,7 +132,7 @@ class modInv extends Module {
 
 	//Finish state
 	when(state === UInt(4)){
-		io.control_resp_data := r1
+		io.control_resp_data := r1(255, 0)
 		state := UInt(0)
 	}
 
