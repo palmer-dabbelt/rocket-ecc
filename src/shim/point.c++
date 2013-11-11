@@ -79,10 +79,11 @@ Point point_dub(const Point &P)
     return Point(Rx, Ry, c);
 }
 
-Point operator*(ModInt &d, Point &P)
+Point operator*(const ModInt &d_in, const Point &P)
 {
     Point R = Point(P._c->field(0), P._c->field(0), P._c);
     Point Q = P;
+    ModInt d(d_in);
     bool set = false;
 
     for (int i = 0; i < d.bit_length(); i++) {

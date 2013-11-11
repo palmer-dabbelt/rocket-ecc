@@ -8,7 +8,7 @@
 
 class Point
 {
-protected:
+public:
     const Curve *_c;
     ModInt _x;
     ModInt _y;
@@ -45,8 +45,15 @@ public:
     friend Point point_add(const Point &P, const Point &Q);
     friend Point point_dub(const Point &P);
 
-    friend Point operator*(ModInt &d, Point &P);
-    friend Point operator*(Point &P, ModInt &d) { return d * P; }
+    friend Point operator*(const ModInt &d, const Point &P);
+    friend Point operator*(const BigInt &d, const Point &P)
+        { return P._c->field(d) * P; }
+    friend Point operator*(const Point &P, const ModInt &d)
+        { return d * P; }
+    friend Point operator*(const Point &P, int &d)
+        { return P._c->field(d) * P; }
+    friend Point operator*(int d, const Point &P)
+        { return P * P._c->field(d); }
 
     /* Comparison operators. */
     friend bool operator==(const Point &P, const Point &Q) {
