@@ -13,6 +13,9 @@ public:
     enum Type
     {
         /* NIST-defined curves. */
+        TYPE_P_256,
+
+        /* Non-NIST standard curves. */
         TYPE_P_256_K_1,
 
         /* Debugging curves. */

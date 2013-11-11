@@ -8,6 +8,7 @@
 
 /* The known curves are allocated staticly. */
 static Curve *get_p256k1(void);
+static Curve *get_p256(void);
 static Curve *get_certicom23(void);
 static Curve *get_certicom17(void);
 
@@ -17,6 +18,8 @@ const Curve *Curve::lookup_curve(std::string name)
      * key size. */
     if (name.compare("p256k1") == 0) {
         return get_p256k1();
+    } else if (name.compare("p256") == 0) {
+        return get_p256();
     } else if (name.compare("certicom23") == 0) {
         return get_certicom23();
     } else if (name.compare("certicom17") == 0) {
@@ -48,6 +51,8 @@ Curve::Curve(std::string p_hex,
 int Curve::openssl_name(void) const
 {
     switch (this->_type) {
+    case TYPE_P_256:
+        return NID_X9_62_prime256v1;
     case TYPE_P_256_K_1:
         return NID_secp256k1;
     case TYPE_CERTICOM23:
@@ -67,16 +72,34 @@ Curve *get_p256k1(void)
 
     if (p256k1 == NULL) {
         p256k1 = new Curve(
+            "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F",
+            "0000000000000000000000000000000000000000000000000000000000000000",
+            "0000000000000000000000000000000000000000000000000000000000000007",
+            "79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798",
+            "483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8",
+            "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141",
+            256, Curve::TYPE_P_256_K_1);
+    }
+
+    return p256k1;
+}
+
+Curve *get_p256(void)
+{
+    static Curve *p256 = NULL;
+
+    if (p256 == NULL) {
+        p256 = new Curve(
             "ffffffff00000001000000000000000000000000ffffffffffffffffffffffff",
             "ffffffff00000001000000000000000000000000fffffffffffffffffffffffc",
             "5ac635d8aa3a93e7b3ebbd55769886bc651d06b0cc53b0f63bce3c3e27d2604b",
             "6b17d1f2e12c4247f8bce6e563a440f277037d812deb33a0f4a13945d898c296",
             "4fe342e2fe1a7f9b8ee7eb4a7c0f9e162bce33576b315ececbb6406837bf51f5",
             "ffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551",
-            256, Curve::TYPE_P_256_K_1);
+            256, Curve::TYPE_P_256);
     }
 
-    return p256k1;
+    return p256;
 }
 
 Curve *get_certicom23(void)
