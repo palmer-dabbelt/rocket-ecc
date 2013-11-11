@@ -4,6 +4,7 @@
 #include <iostream>
 #include <openssl/ec.h>
 #include <openssl/ecdsa.h>
+#include <openssl/err.h>
 
 int main(int argc, char **argv)
 {
@@ -14,6 +15,8 @@ int main(int argc, char **argv)
     Signature *signature;
     BIGNUM *kinv;
     BIGNUM *rp;
+
+    ERR_load_crypto_strings();
 
     /* Here we simply parse the command-line arguments. */
     args = new Args(argc, argv);
@@ -45,6 +48,7 @@ int main(int argc, char **argv)
         std::cerr << "pubkey_str: '" << pubkey_str << "'\n";
         if (EC_KEY_set_public_key(key, pubkey) != 1) {
             std::cerr << "Unable to set public key\n";
+            ERR_print_errors_fp(stderr);
             return 2;
         }
         BN_CTX_free(ctx);
