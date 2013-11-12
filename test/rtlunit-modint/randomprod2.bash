@@ -1,1 +1,0 @@
-../modint/randomprod2.bash

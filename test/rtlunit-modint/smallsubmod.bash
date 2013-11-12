@@ -1,1 +1,0 @@
-../modint/smallsubmod.bash

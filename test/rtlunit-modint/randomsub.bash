@@ -1,1 +1,0 @@
-../modint/randomsub.bash

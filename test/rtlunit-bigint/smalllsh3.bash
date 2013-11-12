@@ -1,1 +1,0 @@
-../bigint/smalllsh3.bash
