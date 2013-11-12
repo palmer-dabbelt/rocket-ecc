@@ -13,6 +13,9 @@ public:
     enum Type
     {
         /* NIST-defined curves. */
+        TYPE_P_256,
+
+        /* Non-NIST standard curves. */
         TYPE_P_256_K_1,
 
         /* Debugging curves. */
@@ -62,12 +65,24 @@ public:
         { return this->field(BigInt(x, this->_p.bit_length())); }
     ModInt field(const BigInt &x) const { return ModInt(x, this->_p); }
 
+    /* Generates an integer of this order */
+    ModInt order(const int x) const
+        { return this->field(BigInt(x, this->_q.bit_length())); }
+    ModInt order(const BigInt &x) const { return ModInt(x, this->_q); }
+    ModInt order(const ModInt &x) const { return order(x.data()); }
+
+    /* Inverts an integer, mod this field's multiplicatative order, in
+     * this field (note, NOT this order -- that seems to be specified
+     * by ECDSA?). */
+    ModInt order_invert(const BigInt &x) const
+        { return field(ModInt(x, this->_q).inverse().data()); }
+
     /* The parameters of this curve, as defined by NIST. */
     BigInt p(void) const { return _p; }
     ModInt a(void) const { return this->field(_a); }
     ModInt b(void) const { return this->field(_b); }
-    BigInt x_G(void) const { return _x_G; }
-    BigInt y_G(void) const { return _y_G; }
+    ModInt G_x(void) const { return this->field(_x_G); }
+    ModInt G_y(void) const { return this->field(_y_G); }
     BigInt q(void) const { return _q; }
 };
 

@@ -2,9 +2,11 @@
 
 #include <stack>
 #include <iostream>
-#include <string.h>
 #include <assert.h>
+#include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 ModInt::ModInt(std::string hex, int bit_length, BigInt mod)
     : _data(BigInt(hex, bit_length) % mod),
@@ -95,6 +97,10 @@ ModInt ModInt::inverse(void) const
     BigInt p = this->_mod.extend2x();
     int bit_length = this->bit_length();
 
+    /* Special case a zero check, because there's no inverse of 0. */
+    if (*this == 0)
+        return *this;
+
     /* Here we compute the modular inverse of b, according to the NIST
      * mechanism. */
     BigInt u = this->_data.extend2x();
@@ -148,7 +154,7 @@ ModInt ModInt::inverse(void) const
         }
     }
 
-    assert(((x1 % p) * (this->_data)) == 1);
+    assert(((x1 % p) * extend2x(this->_data)) == 1);
     return ModInt(trunc2x(x1), p);
 }
 

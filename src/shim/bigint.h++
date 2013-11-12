@@ -68,6 +68,7 @@ public:
     /* Allows for the manipulation of BigInt bit widths. */
     BigInt extend(int new_bit_length) const;
     BigInt extend2x(void) const { return extend(bit_length() * 2); }
+    friend BigInt extend2x(const BigInt &i) { return i.extend2x(); }
 
     BigInt trunc(int new_bit_length) const;
     BigInt trunc2x(void) const { return trunc(bit_length() / 2); }

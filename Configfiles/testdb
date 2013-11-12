@@ -1,2 +1,3 @@
 TESTSRC     += simple.bash
 TESTSRC     += genkey.bash
+TESTSRC     += nistp256.bash

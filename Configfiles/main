@@ -115,6 +115,12 @@ COMPILEOPTS += -DPOINT_TEST_HARNESS
 SOURCES     += shim/point.c++
 CONFIG      += testpoint
 
+# The end goal of this project: stand-along signature and verification
+# binaries.
+BINARIES    += sign
+SOURCES     += shim/sign.c++
+CONFIG      += testdb
+
 ##############################################################################
 # OpenSSL Tests                                                              #
 ##############################################################################
