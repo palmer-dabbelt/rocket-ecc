@@ -36,6 +36,7 @@ const char *Point::hex_cstr(void) const
     return out;
 }
 
+Point operator+(const Point &P, const Point &Q) __attribute__((weak));
 Point operator+(const Point &P, const Point &Q)
 {
     if (P == Q)
@@ -79,6 +80,7 @@ Point point_dub(const Point &P)
     return Point(Rx, Ry, c);
 }
 
+Point operator*(const ModInt &d_in, const Point &P) __attribute__((weak));
 Point operator*(const ModInt &d_in, const Point &P)
 {
     Point R = Point(P._c->field(0), P._c->field(0), P._c);

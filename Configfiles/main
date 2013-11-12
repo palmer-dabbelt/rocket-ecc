@@ -61,6 +61,17 @@ DEPLIBS     += chiselcrypt
 SOURCES     += rtlunit/modint/redirect.c++
 CONFIG      += testmodint
 
+# Some arithmetic tests for the Point
+BINARIES    += rtlunit-point
+COMPILEOPTS += -Isrc/shim
+COMPILEOPTS += -DPOINT_TEST_HARNESS
+COMPILEOPTS += -DPOINT_TEST_BIT_LENGTH=256
+SOURCES     += rtlunit/point/main.scala
+COMPILEOPTS += -dPointHarness
+DEPLIBS     += chiselcrypt
+SOURCES     += rtlunit/point/redirect.c++
+CONFIG      += testpoint
+
 ##############################################################################
 # RISC-V Tests                                                               #
 ##############################################################################

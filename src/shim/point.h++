@@ -26,6 +26,7 @@ public:
     /* Simply returns the components of this point. */
     ModInt x(void) const { return _x; }
     ModInt y(void) const { return _y; }
+    const Curve *c(void) const { return _c; }
 
     /* Returns each integer as a string. */
     std::string x_hex(void) const { return _x.hex(); }
