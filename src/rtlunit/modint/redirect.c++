@@ -35,12 +35,10 @@ ModInt operator-(const ModInt &a, const ModInt &b)
     return run_in_chisel(a, b, FUNC_TYPE_SUB);
 }
 
-#if 0
 ModInt operator*(const ModInt &a, const ModInt &b)
 {
     return run_in_chisel(a, b, FUNC_TYPE_MUL);
 }
-#endif
 
 ModInt ModInt::inverse(void) const
 {
