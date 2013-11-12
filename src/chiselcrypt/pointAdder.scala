@@ -23,20 +23,33 @@ class pointAdder extends Module {
 	val io = new pointAdderIO
 
 	val modinv = Module(new modInv())
+        modinv.io.control_req_val     := Bool(false)
+        modinv.io.control_req_operand := UInt(0)
+        modinv.io.control_req_modulo  := UInt(0)
+
 	val modmul = Module(new modMultiply())
+        modmul.io.control_req_val     := Bool(false)
+        modmul.io.control_req_op1     := UInt(0)
+        modmul.io.control_req_op2     := UInt(0)
+        modmul.io.control_req_modulo  := UInt(0)
 
 	//Registers
-	val slope = Reg(Bits(0, 256))
-	val slopeSq = Reg(Bits(0, 256))
-	val modulo = Reg(Bits(0, 256))
-	val Op1X = Reg(Bits(0, 256))
-	val Op1Y = Reg(Bits(0, 256))
-	val Op2X = Reg(Bits(0, 256))
-	val Op2Y = Reg(Bits(0, 256))
-	val curveA = Reg(Bits(0, 256))
-	val outX = Reg(Bits(0, 256))
-	val outY = Reg(Bits(0, 256))
-	val deltaXInv = Reg(Bits(0, 256))
+	val slope = Reg(Bits(0, 256));     slope := slope
+	val slopeSq = Reg(Bits(0, 256));   slopeSq := slopeSq
+	val modulo = Reg(Bits(0, 256));    modulo := modulo
+	val Op1X = Reg(Bits(0, 256));      Op1X := Op1X
+	val Op1Y = Reg(Bits(0, 256));      Op1Y := Op1Y
+	val Op2X = Reg(Bits(0, 256));      Op2X := Op2X
+	val Op2Y = Reg(Bits(0, 256));      Op2Y := Op2Y
+	val curveA = Reg(Bits(0, 256));    curveA := curveA
+	val outX = Reg(Bits(0, 256));      outX := outX
+	val outY = Reg(Bits(0, 256));      outY := outY
+	val deltaXInv = Reg(Bits(0, 256)); deltaXInv := deltaXInv
+
+        // Default values for output wires
+        io.control_resp_val := Bool(false)
+        io.outX := UInt(0)
+        io.outY := UInt(0)
 
 	//Combinational Wires
 	val deltaY = Op1Y - Op2Y
